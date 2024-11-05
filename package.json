@@ -1,0 +1,45 @@
+{
+  "name": "umc-7th-mini-backend",
+  "version": "1.0.0",
+  "description": "mini project A backend service for a team project schedule management application.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UMC-7th-mini/UMC-7th-mini-backend.git"
+  },
+  "author": "dania0x4C",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UMC-7th-mini/UMC-7th-mini-backend/issues"
+  },
+  "homepage": "https://github.com/UMC-7th-mini/UMC-7th-mini-backend#readme",
+  "dependencies": {
+    "@prisma/client": "^5.21.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@eslint/js": "^9.14.0",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "globals": "^15.12.0",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
+    "prisma": "^5.21.1"
+  }
+}

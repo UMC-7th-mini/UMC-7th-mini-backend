@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: . # Dockerfile이 있는 위치
+    ports:
+      - "3000:3000" # 호스트:컨테이너 포트
+    volumes:
+      - .:/usr/src/app # 현재 디렉토리를 컨테이너에 마운트
+    command: npm start # 컨테이너가 시작될 때 실행할 명령어
+    depends_on:
+      - db # app 서비스가 db 서비스에 의존
+
+  db:
+    image: postgres:latest # Postgres 최신 이미지
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432" # 호스트:컨테이너 포트
+    volumes:
+      - dbdata:/var/lib/postgresql/data # 데이터가 유지되도록 볼륨 마운트
+
+volumes:
+  dbdata:
