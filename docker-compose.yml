@@ -1,27 +1,46 @@
-version: "3.8"
-
-services:
+services: # 컨테이너의 정의
   app:
-    build:
-      context: . # Dockerfile이 있는 위치
+    container_name: my-umc-container
+    build: # image말고 dockerfile 불러오기
+      context: ./ # Dockerfile이 있는 위치 = 동일 디렉토리
     ports:
-      - "3000:3000" # 호스트:컨테이너 포트
+      - "3000:3000" # 호스트:컨테이너 포트 매핑
     volumes:
-      - .:/usr/src/app # 현재 디렉토리를 컨테이너에 마운트
-    command: npm start # 컨테이너가 시작될 때 실행할 명령어
+      - ./:/app # 현재 디렉토리를 컨테이너에 마운트
     depends_on:
-      - db # app 서비스가 db 서비스에 의존
-
-  db:
-    image: postgres:latest # Postgres 최신 이미지
+      - mysql_db # app 서비스가 mysql_db 서비스에 의존
+    stdin_open: true # 표준 입력을 열어두어 상호작용 가능하게 만듬
+    tty:
+      true # 가상 터미널을 할당
+      # 즉, ssh로 컨테이너 외부에서 입력이 가능해짐
+    networks:
+      - app-db
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
+      - DB_HOST=mysql_db # 변경된 DB 컨테이너 이름에 맞게 수정
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=rootpw
+      - DB_DATABASE=db
+
+  mysql_db: # 서비스 이름을 mysql_db로 수정
+    image: mysql:latest # 최신 MySQL 이미지
+    container_name: my-umc-db-container
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpw  # 루트 계정의 비밀번호
+      - MYSQL_DATABASE=db            # 초기 생성할 데이터베이스 이름
+      - MYSQL_USER=myuser            # 새로운 사용자 (root가 아닌 사용자)
+      - MYSQL_PASSWORD=myuserpw      # 해당 사용자의 비밀번호
     ports:
-      - "5432:5432" # 호스트:컨테이너 포트
+      - "3306:3306" # 호스트:컨테이너 포트
     volumes:
-      - dbdata:/var/lib/postgresql/data # 데이터가 유지되도록 볼륨 마운트
+      - db:/var/lib/mysql # 데이터가 유지되도록 볼륨 마운트
+    restart: unless-stopped
+    networks:
+      - app-db
 
 volumes:
-  dbdata:
+  db:
+
+networks:
+  app-db: # 전역적으로 네트워크를 정의함
+    driver: bridge # 단일 호스트이기 때문에 각 컨테이너 격리가 가능한 기본을 선택
