@@ -10,26 +10,24 @@ services: # 컨테이너의 정의
     depends_on:
       - mysql_db # app 서비스가 mysql_db 서비스에 의존
     stdin_open: true # 표준 입력을 열어두어 상호작용 가능하게 만듬
-    tty:
-      true # 가상 터미널을 할당
-      # 즉, ssh로 컨테이너 외부에서 입력이 가능해짐
+    tty: true # 가상 터미널을 할당
     networks:
       - app-db
     environment:
-      - DB_HOST=mysql_db # 변경된 DB 컨테이너 이름에 맞게 수정
-      - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASSWORD=rootpw
-      - DB_DATABASE=db
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
 
-  mysql_db: # 서비스 이름을 mysql_db로 수정
-    image: mysql:latest # 최신 MySQL 이미지
+  mysql_db:
+    image: mysql:latest
     container_name: my-umc-db-container
     environment:
-      - MYSQL_ROOT_PASSWORD=rootpw  # 루트 계정의 비밀번호
-      - MYSQL_DATABASE=db            # 초기 생성할 데이터베이스 이름
-      - MYSQL_USER=myuser            # 새로운 사용자 (root가 아닌 사용자)
-      - MYSQL_PASSWORD=myuserpw      # 해당 사용자의 비밀번호
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - "3306:3306" # 호스트:컨테이너 포트
     volumes:
