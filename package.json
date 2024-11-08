@@ -20,9 +20,10 @@
   },
   "homepage": "https://github.com/UMC-7th-mini/UMC-7th-mini-backend#readme",
   "dependencies": {
-    "@prisma/client": "^5.21.1",
+    "@prisma/client": "^5.22.0",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "mysql2": "^3.11.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.25.9",
@@ -40,6 +41,6 @@
     "globals": "^15.12.0",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
-    "prisma": "^5.21.1"
+    "prisma": "^5.22.0"
   }
 }

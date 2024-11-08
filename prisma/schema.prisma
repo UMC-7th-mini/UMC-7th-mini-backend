@@ -9,6 +9,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL") // 환경 변수를 사용
+}
+
+
+// User 모델 정의
+model User {
+  id    Int     @id @default(autoincrement()) // 기본 키
+  email String  @unique                      // 고유 이메일 필드
+  name  String?                               // 선택적 이름 필드
 }

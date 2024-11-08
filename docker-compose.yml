@@ -8,7 +8,7 @@ services: # 컨테이너의 정의
     volumes:
       - ./:/app # 현재 디렉토리를 컨테이너에 마운트
     depends_on:
-      - mysql_db # app 서비스가 mysql_db 서비스에 의존
+      - mysql_db # app 서비스가 mysql_db 서비스에 의존 즉, mysql이 먼저 실행
     stdin_open: true # 표준 입력을 열어두어 상호작용 가능하게 만듬
     tty: true # 가상 터미널을 할당
     networks:
