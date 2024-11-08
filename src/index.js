@@ -1,17 +1,16 @@
 import express from "express";
+import userRoutes from "./user/user.route.js";
+import calendarRoutes from "./calendar/calendar.route.js";
+import projectRoutes from "./project/project.route.js";
 
 const app = express();
 const port = 3000;
 
-// 미들웨어 설정 (예: JSON 요청을 처리)
 app.use(express.json());
+app.use("/users", userRoutes);
+app.use("/calendar", calendarRoutes);
+app.use("/projects", projectRoutes);
 
-// 기본 라우트
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
-
-// 서버 시작
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
