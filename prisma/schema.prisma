@@ -1,133 +1,160 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL") // 환경 변수를 사용
+  provider = "mysql" // 데이터베이스 종류에 따라 변경 가능
+  url      = env("DATABASE_URL")
 }
 
+// Enum 정의
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Mbti {
+  INTJ
+  INTP
+  ENTJ
+  ENTP
+  INFJ
+  INFP
+  ENFJ
+  ENFP
+  ISTJ
+  ISFJ
+  ESTJ
+  ESFJ
+  ISTP
+  ISFP
+  ESTP
+  ESFP
+}
+
+enum PlantStatus {
+  Seed
+  Germination
+  Seedling
+  Mature
+}
+
+enum Authority {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+// User 모델
 model User {
-  field    Int    @id @default(autoincrement())
-  id       String
-  Field    String
-  Field7   String
-  Field2   String
-  Field3   Field3Enum @default(DEFINITION_NOT_PROVIDED)
-  Field4   String
-  Field6   Field6Enum?
-  Field5   Field5Enum?
+  userKey            Int                  @id @default(autoincrement())
+  userId             String               @unique
+  userName           String
+  userPassword       String
+  userEmail          String
+  gender             Gender
+  birth              DateTime
+  mbti               Mbti
+  plantDicts         PlantDict[]
+  projects           ProjectInfo[]
+  taskTables         TaskTable[]
+  privateCalendars   PrivateCalendar[]
+  PlantDictPlantLink PlantDictPlantLink[]
 }
 
+// PlantDict 모델
 model PlantDict {
-  id      Int    @id @default(autoincrement())
-  Field   String
-  Field2  String
-  field   Int
+  dictKey    Int                  @id @default(autoincrement())
+  getDate    DateTime
+  getPlace   String
+  userKey    Int
+  user       User                 @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
+  plantLinks PlantDictPlantLink[]
 }
 
-model PlantTable {
-  id      Int    @id @default(autoincrement())
-  Field   String @default("FLOWERNAME")
-  Field4  PlantTypeEnum @default(DEFAULT)
+// MultiTable 모델
+model PlantDictPlantLink {
+  linkKey          Int        @id @default(autoincrement())
+  userKey          Int
+  plantKey         Int
+  user             User       @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
+  plant            Plant      @relation(fields: [plantKey], references: [plantKey], onDelete: Cascade)
+  PlantDict        PlantDict? @relation(fields: [plantDictDictKey], references: [dictKey])
+  plantDictDictKey Int?
 }
 
-model ProjectName {
-  id              Int    @id @default(autoincrement())
-  Field2          Int
-  Field           Int    @default(0)
-  Field3          String
-  Field4          String
-  Field5          String
-  Field6          Int
-  PlantTableId    Int
-  privateCalKey   Int
-  Field7          Int
-  Field8          ProjectNameEnum
+// Plant 모델
+model Plant {
+  plantKey    Int                  @id @default(autoincrement())
+  plantName   String
+  plantStatus PlantStatus
+  projects    Project[]
+  plantLinks  PlantDictPlantLink[]
 }
 
-model ProjectCalendar {
-  id              Int    @id @default(autoincrement())
-  Field           String?
-  Field2          DateTime?
-  Field5          String?
-  ProjectNameId   Int
-  privateCalKey   Int
-}
-
-model ProjectInfo {
-  id              Int    @id @default(autoincrement())
-  field           Int
-  ProjectNameId   Int
-  Field           Boolean @default(false)
-  Field2          RoleEnum @default(CREATOR)
-}
-
-model MultiTable {
-  id              Int    @id @default(autoincrement())
-  Key2            Int
-  PlantTableId    Int
-}
-
+// TaskTable 모델
 model TaskTable {
-  id              Int    @id @default(autoincrement())
+  taskKey         Int              @id @default(autoincrement())
   taskName        String
-  taskProgress    TaskProgressEnum
-  TaskStartDate   String
-  TaskEndDate     String
-  field           Int
-  ProjectNameId   Int
-  privateCalKey   Int
-  Key2            Int
+  taskProgress    String
+  taskStartDate   DateTime
+  taskEndDate     DateTime
+  userKey         Int
+  projectKey      Int
+  memoKey         Int?
+  user            User             @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
+  project         Project          @relation(fields: [projectKey], references: [projectKey], onDelete: Cascade)
+  projectCalendar ProjectCalendar? @relation(fields: [memoKey], references: [memoKey], onDelete: SetNull)
 }
 
+// ProjectCalendar 모델
+model ProjectCalendar {
+  memoKey         Int              @id @default(autoincrement())
+  memoName        String
+  calendarDate    DateTime?
+  memo            String
+  projectKey      Int              @unique
+  privateCalKey   Int?
+  project         Project          @relation(fields: [projectKey], references: [projectKey], onDelete: Cascade)
+  privateCalendar PrivateCalendar? @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: SetNull)
+  taskTables      TaskTable[]
+}
+
+// ProjectInfo 모델
+model ProjectInfo {
+  projectInfoKey Int       @id @default(autoincrement())
+  userKey        Int
+  projectKey     Int
+  importance     Boolean
+  authority      Authority
+  user           User      @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
+  project        Project   @relation(fields: [projectKey], references: [projectKey], onDelete: Cascade)
+}
+
+// PrivateCalendar 모델
 model PrivateCalendar {
-  id    Int @id @default(autoincrement())
-  field Int
+  privateCalendarKey Int               @id @default(autoincrement())
+  userKey            Int
+  user               User              @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
+  projectCalendars   ProjectCalendar[]
+  projects           Project[]
 }
 
-enum Field3Enum {
-  DEFINITION_NOT_PROVIDED
-}
-
-enum Field6Enum {
-  VALUE1
-  VALUE2
-  VALUE3
-}
-
-enum Field5Enum {
-  VALUE1
-  VALUE2
-  VALUE3
-}
-
-enum PlantTypeEnum {
-  DEFAULT
-  OTHER
-}
-
-enum ProjectNameEnum {
-  OPTION1
-  OPTION2
-  OPTION3
-  OPTION4
-}
-
-enum RoleEnum {
-  CREATOR
-  INVITEE
-  NO_PERMISSION
-}
-
-enum TaskProgressEnum {
-  NOT_STARTED
-  IN_PROGRESS
-  COMPLETED
+// Project 모델
+model Project {
+  projectKey      Int              @id @default(autoincrement())
+  totalPeople     Int
+  totalProgress   Int
+  startDate       DateTime
+  endDate         DateTime
+  projectName     String
+  taskCount       Int
+  plantKey        Int?
+  privateCalKey   Int?
+  currentProgress String
+  taskTables      TaskTable[]
+  projectCalendar ProjectCalendar?
+  privateCalendar PrivateCalendar? @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: SetNull)
+  plant           Plant?           @relation(fields: [plantKey], references: [plantKey], onDelete: SetNull)
+  projectInfos    ProjectInfo[]
 }
