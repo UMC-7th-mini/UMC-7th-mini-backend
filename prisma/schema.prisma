@@ -13,10 +13,121 @@ datasource db {
   url      = env("DATABASE_URL") // 환경 변수를 사용
 }
 
-
-// User 모델 정의
 model User {
-  id    Int     @id @default(autoincrement()) // 기본 키
-  email String  @unique                      // 고유 이메일 필드
-  name  String?                               // 선택적 이름 필드
+  field    Int    @id @default(autoincrement())
+  id       String
+  Field    String
+  Field7   String
+  Field2   String
+  Field3   Field3Enum @default(DEFINITION_NOT_PROVIDED)
+  Field4   String
+  Field6   Field6Enum?
+  Field5   Field5Enum?
+}
+
+model PlantDict {
+  id      Int    @id @default(autoincrement())
+  Field   String
+  Field2  String
+  field   Int
+}
+
+model PlantTable {
+  id      Int    @id @default(autoincrement())
+  Field   String @default("FLOWERNAME")
+  Field4  PlantTypeEnum @default(DEFAULT)
+}
+
+model ProjectName {
+  id              Int    @id @default(autoincrement())
+  Field2          Int
+  Field           Int    @default(0)
+  Field3          String
+  Field4          String
+  Field5          String
+  Field6          Int
+  PlantTableId    Int
+  privateCalKey   Int
+  Field7          Int
+  Field8          ProjectNameEnum
+}
+
+model ProjectCalendar {
+  id              Int    @id @default(autoincrement())
+  Field           String?
+  Field2          DateTime?
+  Field5          String?
+  ProjectNameId   Int
+  privateCalKey   Int
+}
+
+model ProjectInfo {
+  id              Int    @id @default(autoincrement())
+  field           Int
+  ProjectNameId   Int
+  Field           Boolean @default(false)
+  Field2          RoleEnum @default(CREATOR)
+}
+
+model MultiTable {
+  id              Int    @id @default(autoincrement())
+  Key2            Int
+  PlantTableId    Int
+}
+
+model TaskTable {
+  id              Int    @id @default(autoincrement())
+  taskName        String
+  taskProgress    TaskProgressEnum
+  TaskStartDate   String
+  TaskEndDate     String
+  field           Int
+  ProjectNameId   Int
+  privateCalKey   Int
+  Key2            Int
+}
+
+model PrivateCalendar {
+  id    Int @id @default(autoincrement())
+  field Int
+}
+
+enum Field3Enum {
+  DEFINITION_NOT_PROVIDED
+}
+
+enum Field6Enum {
+  VALUE1
+  VALUE2
+  VALUE3
+}
+
+enum Field5Enum {
+  VALUE1
+  VALUE2
+  VALUE3
+}
+
+enum PlantTypeEnum {
+  DEFAULT
+  OTHER
+}
+
+enum ProjectNameEnum {
+  OPTION1
+  OPTION2
+  OPTION3
+  OPTION4
+}
+
+enum RoleEnum {
+  CREATOR
+  INVITEE
+  NO_PERMISSION
+}
+
+enum TaskProgressEnum {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
 }
