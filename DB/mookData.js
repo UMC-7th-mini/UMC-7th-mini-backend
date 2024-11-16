@@ -20,7 +20,7 @@ async function main() {
   const plant = await prisma.plant.create({
     data: {
       plantName: "Rose",
-      plantStatus: "Seed",
+      plantStatus: "Seedling",
     },
   });
 
@@ -40,19 +40,7 @@ async function main() {
     data: {
       userKey: user.userKey,
       plantKey: plant.plantKey,
-    },
-  });
-
-  // TaskTable 데이터 생성
-  const taskTable = await prisma.taskTable.create({
-    data: {
-      taskName: "Complete Report",
-      taskProgress: "In Progress",
-      taskStartDate: new Date("2024-01-15"),
-      taskEndDate: new Date("2024-02-15"),
-      user: {
-        connect: { userKey: user.userKey },
-      },
+      plantDictDictKey: plantDict.dictKey,
     },
   });
 
@@ -66,6 +54,25 @@ async function main() {
       projectName: "Green Initiative",
       taskCount: 10,
       currentProgress: "On Track",
+      plant: {
+        connect: { plantKey: plant.plantKey },
+      },
+    },
+  });
+
+  // TaskTable 데이터 생성
+  const taskTable = await prisma.taskTable.create({
+    data: {
+      taskName: "Complete Report",
+      taskProgress: "In Progress",
+      taskStartDate: new Date("2024-01-15"),
+      taskEndDate: new Date("2024-02-15"),
+      user: {
+        connect: { userKey: user.userKey },
+      },
+      project: {
+        connect: { projectKey: project.projectKey },
+      },
     },
   });
 
@@ -111,7 +118,7 @@ main()
     await prisma.$disconnect();
   })
   .catch(async error => {
-    console.error(error);
+    console.error("Error creating mock data:", error);
     await prisma.$disconnect();
     process.exit(1);
   });

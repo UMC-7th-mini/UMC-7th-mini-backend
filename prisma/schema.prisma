@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql" // 데이터베이스 종류에 따라 변경 가능
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -55,11 +55,11 @@ model User {
   gender             Gender
   birth              DateTime
   mbti               Mbti
-  plantDicts         PlantDict[]
-  projects           ProjectInfo[]
-  taskTables         TaskTable[]
-  privateCalendars   PrivateCalendar[]
-  PlantDictPlantLink PlantDictPlantLink[]
+  plantDicts         PlantDict[]          // 1:N 관계
+  projects           ProjectInfo[]        // N:M 관계
+  taskTables         TaskTable[]          // 1:N 관계
+  privateCalendar    PrivateCalendar?     // 1:1 관계
+  PlantDictPlantLink PlantDictPlantLink[] // N:M 관계
 }
 
 // PlantDict 모델
@@ -101,10 +101,10 @@ model TaskTable {
   taskEndDate     DateTime
   userKey         Int
   projectKey      Int
-  memoKey         Int?
+  projectCalendarKey Int?
   user            User             @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
   project         Project          @relation(fields: [projectKey], references: [projectKey], onDelete: Cascade)
-  projectCalendar ProjectCalendar? @relation(fields: [memoKey], references: [memoKey], onDelete: SetNull)
+  projectCalendar ProjectCalendar? @relation(fields: [projectCalendarKey], references: [memoKey], onDelete: SetNull)
 }
 
 // ProjectCalendar 모델
@@ -113,7 +113,7 @@ model ProjectCalendar {
   memoName        String
   calendarDate    DateTime?
   memo            String
-  projectKey      Int              @unique
+  projectKey      Int
   privateCalKey   Int?
   project         Project          @relation(fields: [projectKey], references: [projectKey], onDelete: Cascade)
   privateCalendar PrivateCalendar? @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: SetNull)
@@ -134,7 +134,7 @@ model ProjectInfo {
 // PrivateCalendar 모델
 model PrivateCalendar {
   privateCalendarKey Int               @id @default(autoincrement())
-  userKey            Int
+  userKey            Int               @unique // 수정: 1:1 관계
   user               User              @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
   projectCalendars   ProjectCalendar[]
   projects           Project[]
@@ -149,11 +149,11 @@ model Project {
   endDate         DateTime
   projectName     String
   taskCount       Int
-  plantKey        Int?
+  plantKey        Int?             // 1:1 관계
   privateCalKey   Int?
   currentProgress String
   taskTables      TaskTable[]
-  projectCalendar ProjectCalendar?
+  projectCalendars ProjectCalendar[] // 수정: 1:N 관계로 변경
   privateCalendar PrivateCalendar? @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: SetNull)
   plant           Plant?           @relation(fields: [plantKey], references: [plantKey], onDelete: SetNull)
   projectInfos    ProjectInfo[]
