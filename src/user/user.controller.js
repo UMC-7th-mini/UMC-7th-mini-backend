@@ -4,6 +4,8 @@ import { validateUserInput, validateUserOutput } from "./dtos/user.dto.js";
 
 export const getUserById = async (req, res, next) => {
   try {
+    // 입력 유효성 검사
+    validateUserInput({ id: req.params.id });
 
     // 서비스 호출
     const user = await userService.getUserById(req.params.id);
@@ -12,6 +14,9 @@ export const getUserById = async (req, res, next) => {
     if (!user) {
       return next(new HttpException(404, "No user found with the provided ID"));
     }
+
+    // 반환 유효성 검사
+    validateUserOutput(user);
 
     return res.status(200).json({ success: true, data: user });
   } catch (error) {
