@@ -1,7 +1,5 @@
-// user/user.route.js
 import express from "express";
-import { getUserById } from "./user.controller.js";
-// 라우터를 설정
+import signRouter from "./sign/sign.route.js";
 
 const router = express.Router();
 
@@ -10,7 +8,7 @@ router.get("/", (req, res) => {
   res.send("User main route");
 });
 
-// 추가 라우터 사용하기
-router.get("/:id", getUserById);
+// /user/sign 경로 설정
+router.use("/sign", signRouter);
 
 export default router;
