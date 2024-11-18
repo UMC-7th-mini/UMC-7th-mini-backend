@@ -54,8 +54,7 @@ model User {
   userEmail          String
   gender             Gender
   birth              DateTime
-  role               String?               
-  mbti               Mbti?                 
+  mbti               Mbti
   plantDicts         PlantDict[]          // 1:N 관계
   projects           ProjectInfo[]        // N:M 관계
   taskTables         TaskTable[]          // 1:N 관계
@@ -159,4 +158,3 @@ model Project {
   plant           Plant?           @relation(fields: [plantKey], references: [plantKey], onDelete: SetNull)
   projectInfos    ProjectInfo[]
 }
-                                           
