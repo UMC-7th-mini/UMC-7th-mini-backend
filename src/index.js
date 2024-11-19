@@ -7,11 +7,11 @@ import dotenv from 'dotenv';
 
 // 라우터 파일 가져오기
 import userRoutes from './user/user.route.js';
-import calendarRoutes from './calendar/calendar.route.js';
-import projectRoutes from './project/project.route.js';
 
 // 오류 처리 미들웨어 가져오기
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
+import { getUserInfo } from './user/info/user.info.controller.js';
+import { getProjectInfo } from './project/project.controller.js';
 
 dotenv.config(); // dotenv 설정
 
@@ -27,9 +27,16 @@ app.use(compression());
 app.use(morgan('dev'));
 
 // 라우터 설정
-app.use("/users", userRoutes);
-app.use("/calendar", calendarRoutes);
-app.use("/projects", projectRoutes);
+
+// 지워 users 때문에 이상한거에 접속함
+
+// app.use("/users", userRoutes);/
+// app.use("/calendar", calendarRoutes);
+// app.use("/projects", projectRoutes);
+
+// jun
+app.get("/users/info", getUserInfo);
+// app.get("/projects/info", getProjectInfo);
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);
