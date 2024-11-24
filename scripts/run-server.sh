@@ -18,5 +18,6 @@ FLUSH PRIVILEGES;
 
 
 # 얘부터 실행 먼저 해야함
-# taskkill /PID {PIDnum} /F
+#taskkill /PID {PIDnum} /F
+
 docker exec -it my-umc-container bash -c "npm run start"

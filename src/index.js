@@ -15,7 +15,7 @@ import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
 import { getUserInfo } from './user/info/user.info.controller.js';
-import { getProjectInfo, getSpecificProjectInfo } from './project/project.controller.js';
+import { getProjectInfo } from './project/project.controller.js';
 
 dotenv.config(); // dotenv 설정
 
@@ -71,8 +71,7 @@ app.get("/openapi.json", async (req, res, next) => {
 
 // jun
 app.get("/users/info", getUserInfo);
-app.get("/projects/info", getProjectInfo);
-app.get("/projects/:projectKey/info", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
+// app.get("/projects/info", getProjectInfo);
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);
