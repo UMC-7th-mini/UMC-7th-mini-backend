@@ -8,3 +8,4 @@ docker exec -it my-umc-container npx prisma migrate dev
 # 이후에 prisma 실행
 
 # docker 안에서 실행
+
