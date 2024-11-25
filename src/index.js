@@ -71,7 +71,8 @@ app.get("/openapi.json", async (req, res, next) => {
 
 // jun
 app.get("/users/info", getUserInfo);
-// app.get("/projects/info", getProjectInfo);
+app.get("/projects/info", getProjectInfo);
+app.get("/projects/:projectKey/info", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);
