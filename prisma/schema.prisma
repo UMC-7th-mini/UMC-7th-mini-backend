@@ -55,6 +55,7 @@ model User {
   gender             Gender
   birth              DateTime
   mbti               Mbti
+  role               String?
   plantDicts         PlantDict[]          // 1:N 관계
   projects           ProjectInfo[]        // N:M 관계
   taskTables         TaskTable[]          // 1:N 관계
