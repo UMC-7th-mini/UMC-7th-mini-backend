@@ -22,6 +22,7 @@ dotenv.config(); // dotenv 설정
 const app = express();
 const port = 3000;
 
+
 // 미들웨어 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -71,7 +72,7 @@ app.get("/openapi.json", async (req, res, next) => {
 
 // jun
 app.get("/users/info", getUserInfo);
-// app.get("/projects/info", getProjectInfo);
+app.get("/projects/info", getProjectInfo);
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);
