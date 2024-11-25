@@ -12,6 +12,10 @@ docker exec -it my-umc-container bash  #-c "npm run start"
 #npm prisma generate
 npx prisma generate
 
+
+# DB docker container 접속
+docker exec -it my-umc-db-container mysql -u root -p
+
 # 권한 설정
 GRANT ALL PRIVILEGES ON db.* TO 'myuser'@'localhost';
 FLUSH PRIVILEGES;
