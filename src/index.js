@@ -7,8 +7,6 @@ import dotenv from 'dotenv';
 
 // 라우터 파일 가져오기
 import userRoutes from './user/user.route.js';
-import calendarRoutes from './calendar/calendar.route.js';
-import projectRoutes from './project/project.route.js';
 
 // 오류 처리 미들웨어 가져오기
 import swaggerAutogen from "swagger-autogen";
@@ -16,6 +14,7 @@ import swaggerUiExpress from "swagger-ui-express";
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
 import { getUserInfo } from './user/info/user.info.controller.js';
 import { getProjectInfo } from './project/project.controller.js';
+import { getSpecificProjectInfo } from './project/project.controller.js';
 
 dotenv.config(); // dotenv 설정
 
