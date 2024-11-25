@@ -2,9 +2,8 @@ import HttpException from "../../middlewares/errorHandler.js";
 import { getUserInfoService } from "./user.info.service.js";
 
 
-
 export const getUserInfo = async (req, res, next) => { 
-    /**
+     /**
      * @swagger
      * /users/info:
      *   get:

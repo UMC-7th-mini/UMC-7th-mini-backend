@@ -22,6 +22,7 @@ dotenv.config(); // dotenv 설정
 const app = express();
 const port = 3000;
 
+
 // 미들웨어 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
