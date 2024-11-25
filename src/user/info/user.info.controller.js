@@ -3,97 +3,31 @@ import { getUserInfoService } from "./user.info.service.js";
 
 
 export const getUserInfo = async (req, res, next) => { 
-     /**
- * @swagger
- * /user/signup:
- *   post:
- *     summary: "회원 가입 API"
- *     description: "새로운 사용자를 등록합니다."
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 description: "사용자의 이메일 주소"
- *               name:
- *                 type: string
- *                 description: "사용자의 이름"
- *               gender:
- *                 type: string
- *                 description: "사용자의 성별"
- *               birth:
- *                 type: string
- *                 format: date
- *                 description: "사용자의 생년월일"
- *               address:
- *                 type: string
- *                 description: "사용자의 주소"
- *               detailAddress:
- *                 type: string
- *                 description: "상세 주소"
- *               phoneNumber:
- *                 type: string
- *                 description: "전화번호"
- *               preferences:
- *                 type: array
- *                 items:
- *                   type: number
- *                 description: "사용자의 선호 카테고리"
- *     responses:
- *       200:
- *         description: "회원 가입 성공 응답"
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 resultType:
- *                   type: string
- *                   example: "SUCCESS"
- *                 error:
- *                   type: object
- *                   nullable: true
- *                   example: null
- *                 success:
- *                   type: object
- *                   properties:
- *                     email:
- *                       type: string
- *                     name:
- *                       type: string
- *                     preferCategory:
- *                       type: array
- *                       items:
- *                         type: string
- *       400:
- *         description: "회원 가입 실패 응답"
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 resultType:
- *                   type: string
- *                   example: "FAIL"
- *                 error:
- *                   type: object
- *                   properties:
- *                     errorCode:
- *                       type: string
- *                       example: "U001"
- *                     reason:
- *                       type: string
- *                     data:
- *                       type: object
- *                 success:
- *                   type: object
- *                   nullable: true
- *                   example: null
- */
+/* #swagger.tags = ['userinfo']
+  #swagger.summary = 'Userget info'
+  #swagger.description = 'userinfo get'
+  #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/User" },
+        },
+      }
+    }
+
+  #swagger.responses[201] = {
+  description: 'User info get 성공',
+  content: {
+    "application/json": {
+      schema: { $ref: "#/components/schemas/User" },
+    }
+  }
+} 
+  #swagger.responses[400] = {
+    description: '잘못된 요청 형식'
+} */
+
+    
     try {
         const userKey = req.body.userKey; // 쿼리에서 userKey 가져오기
 

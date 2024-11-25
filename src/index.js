@@ -9,12 +9,13 @@ import dotenv from 'dotenv';
 import userRoutes from './user/user.route.js';
 
 // 오류 처리 미들웨어 가져오기
-import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
 import { getUserInfo } from './user/info/user.info.controller.js';
 import { getProjectInfo } from './project/project.controller.js';
 import { getSpecificProjectInfo } from './project/project.controller.js';
+import swaggerFile from '../swagger/swagger-output.json' with { type: 'json' };
+import swaggerUi from 'swagger-ui-express';
 
 dotenv.config(); // dotenv 설정
 
@@ -40,26 +41,7 @@ app.use(
   })
 );
 
-app.get("/openapi.json", async (req, res, next) => {
-  // #swagger.ignore = true
-  const options = {
-    openapi: "3.0.0",
-    disableLogs: true,
-    writeOutputFile: false,
-  };
-  const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
-  const routes = ["./src/index.js"];
-  const doc = {
-    info: {
-      title: "UMC 7th",
-      description: "UMC 7th Node.js 테스트 프로젝트입니다.",
-    },
-    host: "localhost:3000",
-  };
-
-  const result = await swaggerAutogen(options)(outputFile, routes, doc);
-  res.json(result ? result.data : null);
-});
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // 라우터 설정
 

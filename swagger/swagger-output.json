@@ -1,0 +1,284 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "User API",
+    "description": "API 문서"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "paths": {
+    "/users/info": {
+      "get": {
+        "tags": [
+          "userinfo"
+        ],
+        "summary": "Userget info",
+        "description": "userinfo get",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "User info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/info": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/projects/{projectKey}/info": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "projectKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "duplicationUsers": {
+        "type": "object",
+        "properties": {
+          "resultType": {
+            "type": "string",
+            "example": "FAIL"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "errorCode": {
+                "type": "string",
+                "example": "U001"
+              },
+              "reason": {
+                "type": "string",
+                "example": "이미 존재하는 이메일입니다."
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "userKey": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "example": "user"
+                  },
+                  "userName": {
+                    "type": "string",
+                    "example": "홍길동"
+                  },
+                  "userEmail": {
+                    "type": "string",
+                    "example": "test@email.com"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "male"
+                  },
+                  "birth": {
+                    "type": "string",
+                    "example": "1999-01-01"
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "user"
+                  },
+                  "mbti": {
+                    "type": "string",
+                    "example": "ENFP"
+                  }
+                }
+              }
+            }
+          },
+          "success": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "userKey": {
+            "type": "number",
+            "example": 1
+          },
+          "userId": {
+            "type": "string",
+            "example": "user"
+          },
+          "userName": {
+            "type": "string",
+            "example": "홍길동"
+          },
+          "userEmail": {
+            "type": "string",
+            "example": "test@naver.com"
+          },
+          "userPassword": {
+            "type": "string",
+            "example": "password"
+          },
+          "gender": {
+            "type": "string",
+            "example": "male"
+          },
+          "bith": {
+            "type": "string",
+            "example": "1999-01-01"
+          },
+          "role": {
+            "type": "string",
+            "example": "user"
+          },
+          "mbti": {
+            "type": "string",
+            "example": "ENFP"
+          }
+        }
+      },
+      "PlantDict": {
+        "type": "object",
+        "properties": {
+          "plantKey": {
+            "type": "number",
+            "example": 1
+          },
+          "getDate": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "getPlace": {
+            "type": "string",
+            "example": "project1"
+          },
+          "userKey": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "PlantDictPlantLink": {
+        "type": "object",
+        "properties": {
+          "linkKey": {
+            "type": "number",
+            "example": 1
+          },
+          "userKey": {
+            "type": "number",
+            "example": 1
+          },
+          "plantKey": {
+            "type": "number",
+            "example": 1
+          },
+          "planyDictKey": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "projectKey": {
+            "type": "number",
+            "example": 1
+          },
+          "totalPeople": {
+            "type": "number",
+            "example": 1
+          },
+          "totalProgress": {
+            "type": "number",
+            "example": 1
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "projectName": {
+            "type": "string",
+            "example": "project1"
+          },
+          "taskCount": {
+            "type": "number",
+            "example": 1
+          },
+          "plantKey": {
+            "type": "number",
+            "example": 1
+          },
+          "privateKey": {
+            "type": "number",
+            "example": 1
+          },
+          "currentProgress": {
+            "type": "string",
+            "example": "50"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "access token",
+        "in": "header"
+      }
+    }
+  }
+}
