@@ -44,10 +44,16 @@ export const getUserInfo = async (req, res, next) => {
      *                       nullable: true
      *                       example: null
      */
-     try {
-        const userKey = req.body.userKey; // 쿼리에서 userKey 가져오기
+    try {
+        const userKey = req.query.userKey; // 쿼리에서 userKey 가져오기
 
-        const user = await getUserInfoService(userKey); // 사용자 정보 가져오기
+        // userKey를 정수형으로 변환
+        const parsedUserKey = parseInt(userKey, 10);
+        if (isNaN(parsedUserKey)) {
+            return res.status(400).json({ success: false, message: "Invalid userKey" });
+        }
+
+        const user = await getUserInfoService(parsedUserKey); // 변환된 userKey로 사용자 정보 조회
 
         if (!user) {
             return next(new HttpException(404, "User not found")); // 사용자 미발견시 에러 처리

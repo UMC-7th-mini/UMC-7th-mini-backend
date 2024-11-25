@@ -7,6 +7,8 @@ import dotenv from 'dotenv';
 
 // 라우터 파일 가져오기
 import userRoutes from './user/user.route.js';
+import calendarRoutes from './calendar/calendar.route.js';
+import projectRoutes from './project/project.route.js';
 
 // 오류 처리 미들웨어 가져오기
 import swaggerAutogen from "swagger-autogen";
@@ -28,7 +30,6 @@ app.use(cors());
 app.use(helmet());
 app.use(compression());
 app.use(morgan('dev'));
-
 
 app.use(
   "/docs",
