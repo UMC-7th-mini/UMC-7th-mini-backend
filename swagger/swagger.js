@@ -61,6 +61,37 @@ const doc = {
                 plantKey : 1,
                 planyDictKey : 1,
             },
+            Plant : {
+                plantKey : 1,
+                plantName : '소나무',
+            },
+            TaskTable : {
+                taskKey : 1,
+                taskNmae : 'TaskName',
+                taskProgress : '50',
+                taskStartDate : '2021-01-01',
+                taskEndDate : '2021-12-12',
+                userKey : 1,
+                projectCalendarKey : 1,
+            },
+            ProjectCalendar : {
+                memoKey : 1,
+                memoName : 'memoName',
+                calendarDate : '2021-01-01',
+                memo : 'memo detail',
+                projectKey : 1,
+                privateCalKey : 1,
+            },
+            ProjectInfo : {
+                projectInfoKey : 1,
+                userKey : 1,
+                projectKey : 1,
+                importance : true,
+            },
+            PrivateCalendar : {
+                privateCalendarKey : 1,
+                userKey : 1,
+            },
             Project : {
                 projectKey : 1,
                 totalPeople : 1,
@@ -72,7 +103,20 @@ const doc = {
                 plantKey : 1,
                 privateKey : 1,
                 currentProgress : "50",
-            }
+            }, 
+            ProjectMatchUser : {
+                projectKey : 1,
+                projectName : 'project1',
+                totalProgress : 1,
+                startDate : '2021-01-01',
+                endDate : '2021-01-01',
+            }, 
+            SpecificProject : {
+                projectName : 'project1',
+                totalProgress : 1,
+                startDate : '2021-01-01',
+                endDate : '2021-01-01',
+            }, 
         }
     }, 
 }

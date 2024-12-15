@@ -12,7 +12,7 @@
   ],
   "paths": {
     "/users/info": {
-      "get": {
+      "post": {
         "tags": [
           "userinfo"
         ],
@@ -49,18 +49,49 @@
       }
     },
     "/projects/info": {
-      "get": {
-        "description": "",
+      "post": {
+        "tags": [
+          "getProjectInfo"
+        ],
+        "summary": "get all project info",
+        "description": "get all of project info",
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "201": {
+            "description": "project info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectMatchUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectMatchUser"
+              }
+            }
           }
         }
       }
     },
     "/projects/{projectKey}/info": {
-      "get": {
-        "description": "",
+      "post": {
+        "tags": [
+          "getProjectInfo"
+        ],
+        "summary": "get one specific project info",
+        "description": "get specific project info",
         "parameters": [
           {
             "name": "projectKey",
@@ -74,6 +105,97 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "201": {
+            "description": "Project info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecificProject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpecificProject"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/info/progress": {
+      "post": {
+        "tags": [
+          "getProjectInfo"
+        ],
+        "summary": "project in progress",
+        "description": "project in progress",
+        "responses": {
+          "201": {
+            "description": "project info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecificProject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpecificProject"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/info/finish": {
+      "post": {
+        "tags": [
+          "getProjectInfo"
+        ],
+        "summary": "project finish info",
+        "description": "project finish",
+        "responses": {
+          "201": {
+            "description": "project info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecificProject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpecificProject"
+              }
+            }
           }
         }
       }
@@ -171,7 +293,7 @@
             "type": "string",
             "example": "male"
           },
-          "bith": {
+          "brith": {
             "type": "string",
             "example": "1999-01-01"
           },
@@ -227,6 +349,115 @@
           }
         }
       },
+      "Plant": {
+        "type": "object",
+        "properties": {
+          "plantKey": {
+            "type": "number",
+            "example": 1
+          },
+          "plantName": {
+            "type": "string",
+            "example": "소나무"
+          }
+        }
+      },
+      "TaskTable": {
+        "type": "object",
+        "properties": {
+          "taskKey": {
+            "type": "number",
+            "example": 1
+          },
+          "taskNmae": {
+            "type": "string",
+            "example": "TaskName"
+          },
+          "taskProgress": {
+            "type": "string",
+            "example": "50"
+          },
+          "taskStartDate": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "taskEndDate": {
+            "type": "string",
+            "example": "2021-12-12"
+          },
+          "userKey": {
+            "type": "number",
+            "example": 1
+          },
+          "projectCalendarKey": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "ProjectCalendar": {
+        "type": "object",
+        "properties": {
+          "memoKey": {
+            "type": "number",
+            "example": 1
+          },
+          "memoName": {
+            "type": "string",
+            "example": "memoName"
+          },
+          "calendarDate": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "memo": {
+            "type": "string",
+            "example": "memo detail"
+          },
+          "projectKey": {
+            "type": "number",
+            "example": 1
+          },
+          "privateCalKey": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "ProjectInfo": {
+        "type": "object",
+        "properties": {
+          "projectInfoKey": {
+            "type": "number",
+            "example": 1
+          },
+          "userKey": {
+            "type": "number",
+            "example": 1
+          },
+          "projectKey": {
+            "type": "number",
+            "example": 1
+          },
+          "importance": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "PrivateCalendar": {
+        "type": "object",
+        "properties": {
+          "privateCalendarKey": {
+            "type": "number",
+            "example": 1
+          },
+          "userKey": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
       "Project": {
         "type": "object",
         "properties": {
@@ -269,6 +500,52 @@
           "currentProgress": {
             "type": "string",
             "example": "50"
+          }
+        }
+      },
+      "ProjectMatchUser": {
+        "type": "object",
+        "properties": {
+          "projectKey": {
+            "type": "number",
+            "example": 1
+          },
+          "projectName": {
+            "type": "string",
+            "example": "project1"
+          },
+          "totalProgress": {
+            "type": "number",
+            "example": 1
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2021-01-01"
+          }
+        }
+      },
+      "SpecificProject": {
+        "type": "object",
+        "properties": {
+          "projectName": {
+            "type": "string",
+            "example": "project1"
+          },
+          "totalProgress": {
+            "type": "number",
+            "example": 1
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2021-01-01"
           }
         }
       }

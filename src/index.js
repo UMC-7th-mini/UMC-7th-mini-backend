@@ -12,7 +12,7 @@ import userRoutes from './user/user.route.js';
 import swaggerUiExpress from "swagger-ui-express";
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
 import { getUserInfo } from './user/info/user.info.controller.js';
-import { getProjectInfo } from './project/project.controller.js';
+import { getFinishProjectInfo, getProjectInfo, getWorkingProjectInfo } from './project/project.controller.js';
 import { getSpecificProjectInfo } from './project/project.controller.js';
 import swaggerFile from '../swagger/swagger-output.json' with { type: 'json' };
 import swaggerUi from 'swagger-ui-express';
@@ -52,9 +52,11 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 // app.use("/projects", projectRoutes);
 
 // jun
-app.get("/users/info", getUserInfo);
-app.get("/projects/info", getProjectInfo);
-app.get("/projects/:projectKey/info", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
+app.post("/users/info", getUserInfo);
+app.post("/projects/info", getProjectInfo);
+app.post("/projects/:projectKey/info", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
+app.post("/projects/info/progress", getWorkingProjectInfo); // 프로젝트 진행 중
+app.post("/projects/info/finish", getFinishProjectInfo); // 프로젝트 끝
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);
