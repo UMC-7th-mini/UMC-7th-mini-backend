@@ -5,11 +5,10 @@ import { validateUserInput, validateUserOutput } from "./dtos/user.dto.js";
 export const getUserById = async (req, res, next) => {
   try {
     // 입력 유효성 검사
-    validateUserInput({ id: req.params.id });
+    validateUserInput({ id: req.body.userId });
 
     // 서비스 호출
-    const user = await userService.getUserById(req.params.id);
-
+    const user = await userService.getUserById(req.body.userId);
     // 사용자 데이터를 찾지 못한 경우
     if (!user) {
       return next(new HttpException(404, "No user found with the provided ID"));

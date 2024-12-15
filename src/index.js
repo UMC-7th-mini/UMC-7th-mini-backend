@@ -11,12 +11,19 @@ import calendarRouter from './calendar/calendar.route.js';
 import projectRoutes from './project/project.route.js';
 
 // 오류 처리 미들웨어 가져오기
+import swaggerUiExpress from "swagger-ui-express";
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
+import { getUserInfo } from './user/info/user.info.controller.js';
+import { getFinishProjectInfo, getProjectInfo, getWorkingProjectInfo } from './project/project.controller.js';
+import { getSpecificProjectInfo } from './project/project.controller.js';
+import swaggerFile from '../swagger/swagger-output.json' with { type: 'json' };
+import swaggerUi from 'swagger-ui-express';
 
 dotenv.config(); // dotenv 설정
 
 const app = express();
 const port = 3000;
+
 
 // 미들웨어 설정
 app.use(express.json());
@@ -26,10 +33,32 @@ app.use(helmet());
 app.use(compression());
 app.use(morgan('dev'));
 
+app.use(
+  "/docs",
+  swaggerUiExpress.serve,
+  swaggerUiExpress.setup({}, {
+    swaggerOptions: {
+      url: "/openapi.json",
+    },
+  })
+);
+
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 // 라우터 설정
-app.use("/users", userRoutes);
-app.use("/calendar", calendarRouter);
-app.use("/projects", projectRoutes);
+
+// 지워 users 때문에 이상한거에 접속함
+
+// app.use("/users", userRoutes);/
+// app.use("/calendar", calendarRoutes);
+// app.use("/projects", projectRoutes);
+
+// jun
+app.post("/users/info", getUserInfo);
+app.post("/projects/info", getProjectInfo);
+app.post("/projects/:projectKey/info", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
+app.post("/projects/info/progress", getWorkingProjectInfo); // 프로젝트 진행 중
+app.post("/projects/info/finish", getFinishProjectInfo); // 프로젝트 끝
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);
