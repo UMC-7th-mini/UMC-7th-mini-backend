@@ -6,4 +6,4 @@
 docker compose up -d
 
 # Docker 컨테이너 내부에서 서버 실행
-docker exec -it my-umc-container bash -c "npm run start"
+docker exec -it my-umc-container bash 

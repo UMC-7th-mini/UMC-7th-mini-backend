@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 
 // 라우터 파일 가져오기
 import userRoutes from './user/user.route.js';
-import calendarRoutes from './calendar/calendar.route.js';
+import calendarRouter from './calendar/calendar.route.js';
 import projectRoutes from './project/project.route.js';
 
 // 오류 처리 미들웨어 가져오기
@@ -28,7 +28,7 @@ app.use(morgan('dev'));
 
 // 라우터 설정
 app.use("/users", userRoutes);
-app.use("/calendar", calendarRoutes);
+app.use("/calendar", calendarRouter);
 app.use("/projects", projectRoutes);
 
 // 404 처리 미들웨어
