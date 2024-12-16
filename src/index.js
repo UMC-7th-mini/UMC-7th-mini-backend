@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 
 // 라우터 파일 가져오기
 import userRoutes from './user/user.route.js';
-import calendarRouter from './calendar/calendar.route.js';
+// import calendarRouter from './calendar/calendar.route.js';
 import projectRoutes from './project/project.route.js';
 
 // 오류 처리 미들웨어 가져오기
@@ -29,7 +29,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(helmet({ contentSecurityPolicy: false, }));
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 app.use(morgan('dev'));
 
