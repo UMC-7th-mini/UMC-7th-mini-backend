@@ -50,6 +50,7 @@ export const getUserMatchProjectRepository = async (userKey, projectKey) => {
                 select: {
                     projectName: true,
                     totalProgress: true,
+                    taskCount : true,
                     startDate: true,
                     endDate: true,
                 }
@@ -231,4 +232,17 @@ export const getLeastProjectRepository = async (userKey) => {
     }
 
     return filteredProjects; // 프로젝트 정보 반환
+};
+
+
+export const addTask = async (data, key, projectKey) => {
+    const created = await prisma.TaskTable.create({ data : {
+        taskName : data.taskName,
+        taskProgress : data.taskProgress,
+        taskStartDate : data.taskStartDate,
+        taskEndDate : data.taskEndDate,
+        userKey : key,
+        projectKey : data.projectKey,
+    }});
+    return created.id;
 };
