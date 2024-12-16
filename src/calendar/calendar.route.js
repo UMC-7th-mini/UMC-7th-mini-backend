@@ -43,7 +43,6 @@ calendarRouter.delete("/privatecalendar/:userKey/schedule", calendarController.d
 calendarRouter.get("/projectcalendar/:projectKey/projectInfo", calendarController.getProjectInfoController);
 
 
-/*
 //프로젝트 캘린더 조회
 calendarRouter.get("/calendar/projectcalendar/:projectKey", calendarController.getProjectCalendarController);
 
@@ -64,6 +63,6 @@ calendarRouter.get("/calendar/projectcalendar/:projectKey/schedule", calendarCon
 
 //프로젝트 일정 삭제 
 calendarRouter.delete("/calendar/projectcalendar/:projectKey/schedule", calendarController.deleteProjectCalendarScheduleController);
-*/
+
 
 export default calendarRouter;

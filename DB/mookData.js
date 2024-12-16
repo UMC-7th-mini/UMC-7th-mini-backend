@@ -86,12 +86,14 @@ async function main() {
     },
   });
 
-  // PrivateCalendar 데이터 생성
-  const privateCalendar = await prisma.privateCalendar.create({
+   // PrivateCalendar 데이터 생성
+   const privateCalendar = await prisma.privateCalendar.create({
     data: {
       user: {
-        connect: { userKey: user.userKey },
+        connect: { userKey: user.userKey },  // userKey와 연결
       },
+      memo: "This is a sample memo for the private calendar.",
+      schedule: new Date("2024-01-15"),  // 일정 날짜 예시
     },
   });
 
