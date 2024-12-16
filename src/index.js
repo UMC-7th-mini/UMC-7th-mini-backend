@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import helmet from 'helmet';
 import compression from 'compression';
 import dotenv from 'dotenv';
 
@@ -29,7 +28,6 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 app.use(morgan('dev'));
 
