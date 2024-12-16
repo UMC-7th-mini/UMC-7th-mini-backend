@@ -26,12 +26,9 @@ const port = 3000;
 app.use(
   "/docs",
   swaggerUiExpress.serve,
-  swaggerUiExpress.setup({}, {
-    swaggerOptions: {
-      url: "/openapi.json",
-    },
-  })
+  swaggerUiExpress.setup(swaggerFile)
 );
+
 
 // 미들웨어 설정
 app.use(express.json());
