@@ -7,35 +7,64 @@ const prisma = new PrismaClient({log: ['query']}); // PrismaClient 인스턴스 
 
 // 1 유저에 대한 모든 프로젝트 정보
 export const getUserMatchProject = async (userKey) => {
-    // `userKey`를 기준으로 `ProjectInfo`를 통해 관련된 프로젝트 가져오기
+    // `userKey`를 기준으로 관련된 프로젝트 및 사용자 이름 가져오기
     const projectInfos = await prisma.projectInfo.findMany({
-        where: {
-            userKey: parseInt(userKey), // ProjectInfo 모델의 userKey로 필터링
+      where: {
+        userKey: parseInt(userKey), // ProjectInfo 모델의 userKey로 필터링
+      },
+      include: {
+        project: { // Project 정보 포함
+          select: {
+            projectKey: true,
+            projectName: true,
+            totalProgress: true,
+            startDate: true,
+            endDate: true,
+          },
         },
-        include: {
-            project: { // Project 관계 포함
-                select: {
-                    projectKey: true,
-                    projectName: true,
-                    totalProgress: true,
-                    startDate: true,
-                    endDate: true,
-                },
-            },
+        user: { // User 정보 포함
+          select: {
+            userName: true, // 필요한 필드만 가져오기
+          },
         },
+      },
     });
-
-    console.log("Repository results: ", JSON.stringify(projectInfos, null, 2));
-
-    const projects = projectInfos.map(info => info.project);
-
+  
+    // 프로젝트 키 리스트 추출
+    const projectKeys = projectInfos.map(info => info.project.projectKey);
+  
+    // `TaskTable` 데이터를 프로젝트 키를 기준으로 가져오기
+    const tasks = await prisma.taskTable.findMany({
+      where: {
+        projectKey: {
+          in: projectKeys, // 해당 프로젝트에 연결된 TaskTable 데이터 필터링
+        },
+      },
+      select: {
+        taskName: true,
+        taskProgress: true,
+        taskStartDate: true,
+        taskEndDate: true,
+        projectKey: true, // 어떤 프로젝트와 연결된 Task인지 확인하기 위해 포함
+      },
+    });
+  
+    // 프로젝트와 TaskTable 데이터를 매핑
+    const projects = projectInfos.map(info => {
+      const relatedTasks = tasks.filter(task => task.projectKey === info.project.projectKey); // 각 프로젝트에 연결된 TaskTable
+      return {
+        userName: info.user.userName, // User 이름 포함
+        ...info.project,
+        tasks: relatedTasks, // 해당 프로젝트에 연결된 Task 데이터 추가
+      };
+    });
+  
     if (!projects || projects.length === 0) {
-        throw new nonUser("No projects found for this user.");
+      throw new Error("No projects found for this user.");
     }
-
-    return projects; // 프로젝트 정보 반환
-};
-
+  
+    return projects; // 프로젝트 및 Task 정보와 사용자 이름 반환
+  };
 
 
 // project 1개에 대한 정보
@@ -235,7 +264,7 @@ export const getLeastProjectRepository = async (userKey) => {
 };
 
 
-export const addTask = async (data, key, projectKey) => {
+export const addTask = async (data, key) => {
     const created = await prisma.TaskTable.create({ data : {
         taskName : data.taskName,
         taskProgress : data.taskProgress,
@@ -246,3 +275,23 @@ export const addTask = async (data, key, projectKey) => {
     }});
     return created.id;
 };
+
+
+
+
+export const deleteTaskRepository = async (key, taskKey) => {
+    try {
+      const task = await prisma.taskTable.delete({
+        where: {
+          TaskTable: {
+            userKey: key,
+            taskKey: taskKey,
+          },
+        },
+      });
+      return task;
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      throw new Error("Task deletion failed.");
+    }
+  };
