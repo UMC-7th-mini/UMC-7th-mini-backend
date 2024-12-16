@@ -23,14 +23,6 @@ dotenv.config(); // dotenv 설정
 const app = express();
 const port = 3000;
 
-
-// 미들웨어 설정
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: "*" }));
-app.use(compression());
-app.use(morgan('dev'));
-
 app.use(
   "/docs",
   swaggerUiExpress.serve,
@@ -40,6 +32,15 @@ app.use(
     },
   })
 );
+
+// 미들웨어 설정
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors({ origin: "*" }));
+app.use(compression());
+app.use(morgan('dev'));
+
+
 
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
