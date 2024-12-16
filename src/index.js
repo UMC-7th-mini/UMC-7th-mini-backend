@@ -27,7 +27,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false, }));
 app.use(compression());
 app.use(morgan('dev'));
 
@@ -57,6 +57,16 @@ app.post("/projects/info", getProjectInfo);
 app.post("/projects/:projectKey/info", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
 app.post("/projects/info/progress", getWorkingProjectInfo); // 프로젝트 진행 중
 app.post("/projects/info/finish", getFinishProjectInfo); // 프로젝트 끝
+
+
+// 이예지
+// app.post("/projects/:projectKey/member");
+// app.delect("/projects/:projectKey/member");
+// app.put("/projects/:projectKey/task/:taskKey");
+// app.post("/projects/:projectKey/:userKey/task");
+// app.delect("/projects/:projectKey/task/:taskKey");
+// Extra
+// app.get()
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);
