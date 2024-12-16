@@ -104,19 +104,15 @@ const doc = {
                 privateKey : 1,
                 currentProgress : "50",
             }, 
-            ProjectMatchUser : {
-                projectKey : 1,
-                projectName : 'project1',
-                totalProgress : 1,
-                startDate : '2021-01-01',
-                endDate : '2021-01-01',
-            }, 
             SpecificProject : {
                 projectName : 'project1',
                 totalProgress : 1,
                 startDate : '2021-01-01',
                 endDate : '2021-01-01',
             }, 
+            inputProject : {
+                userKey : 1
+            }
         }
     }, 
 }

@@ -1,25 +1,26 @@
 import HttpException from "../middlewares/errorHandler.js";
-import { getFinishProjectInfoService, getProjectInfoService, getSpecificProjectInfoService, getWorkingProjectService } from "./project.service.js";
+import { getFinishProjectInfoService, getLeastProjectInfoService, getProjectInfoService, getRecentProjectInfoService, getSpecificProjectInfoService, getWorkingProjectService } from "./project.service.js";
 
 
 export const getProjectInfo = async (req, res, next) => {
 /* #swagger.tags = ['getProjectInfo']
   #swagger.summary = 'get all project info'
   #swagger.description = 'get all of project info'
-  #swagger.requestBody = {
-      required: true,
-      content: {
-        "application/json": {
-          schema: { $ref: "#/components/schemas/ProjectMatchUser" },
-        },
-      }
-    }
+  #swagger.parameters['userKey'] = {
+        in: 'path',                            
+        description: 'get all project info',                   
+        required: 'true',                     
+        type: 'number',
+        schema: {
+            type : "integer"
+        }        
+  }
 
-  #swagger.responses[201] = {
+  #swagger.responses[200] = {
   description: 'project info get 성공',
   content: {
     "application/json": {
-      schema: { $ref: "#/components/schemas/ProjectMatchUser" },
+      schema: { $ref: "#/components/schemas/SpecificProject" },
     }
   }
 } 
@@ -27,7 +28,8 @@ export const getProjectInfo = async (req, res, next) => {
     description: '잘못된 요청 형식'
 } */
     try {
-        const { userKey } = req.body; // 요청 본문에서 userKey 가져오기
+        const { userKey } = req.params; // 요청 본문에서 userKey 가져오기
+        console.log(userKey);
         const project = await getProjectInfoService(userKey);
         
         console.log("controller : ", project);
@@ -45,20 +47,30 @@ export const getProjectInfo = async (req, res, next) => {
 
 
 export const getSpecificProjectInfo = async (req, res, next) => {
- /* #swagger.tags = ['getProjectInfo']
+/* #swagger.tags = ['getProjectInfo']
   #swagger.summary = 'get one specific project info'
-  #swagger.description = 'get specific project info'
-  #swagger.requestBody = {
-      required: true,
-      content: {
-        "application/json": {
-          schema: { $ref: "#/components/schemas/SpecificProject" },
-        },
-      }
-    }
+  #swagger.description = 'get one specific project info'
+  #swagger.parameters['userKey'] = {
+        in: 'path',                            
+        description: 'get one specific project info',                   
+        required: 'true',                     
+        type: 'number',
+        schema: {
+            type : "integer"
+        }        
+  }
+  #swagger.parameters['projectKey'] = {
+    in: 'path',                            
+    description: 'get one specific project info',                   
+    required: 'true',                     
+    type: 'number',
+        schema: {
+            type : "integer"
+        }          
+  }
 
-  #swagger.responses[201] = {
-  description: 'Project info get 성공',
+   #swagger.responses[200] = {
+  description: 'project info get 성공',
   content: {
     "application/json": {
       schema: { $ref: "#/components/schemas/SpecificProject" },
@@ -69,19 +81,17 @@ export const getSpecificProjectInfo = async (req, res, next) => {
     description: '잘못된 요청 형식'
 } */
     try {
-        const { projectKey} = req.params;
+        const { userKey, projectKey} = req.params;
 
-        const userKey = req.body.userKey;
-
-        console.log("Router : ",projectKey, userKey);
-
+        console.log("Router : ",userKey, projectKey);
+      
         const findProject = await getSpecificProjectInfoService(userKey, projectKey); 
 
         if(!findProject) {
             return next(new HttpException(404, "Project not found"));
         }
 
-        return res.status(200).json({success : true});
+        return res.status(200).json({ success: true, data: findProject });
     } catch (error) {
         return error;
     }
@@ -89,18 +99,19 @@ export const getSpecificProjectInfo = async (req, res, next) => {
 
 export const getWorkingProjectInfo = async (req, res, next) => {
 /* #swagger.tags = ['getProjectInfo']
-  #swagger.summary = 'project in progress'
-  #swagger.description = 'project in progress'
-  #swagger.requestBody = {
-      required: true,
-      content: {
-        "application/json": {
-          schema: { $ref: "#/components/schemas/SpecificProject" },
-        },
-      }
-    }
+  #swagger.summary = 'get working project info'
+  #swagger.description = 'get working project info'
+  #swagger.parameters['userKey'] = {
+        in: 'path',                            
+        description: 'get all project info',                   
+        required: 'true',                     
+        type: 'number',
+        schema: {
+            type : "integer"
+        }        
+  }
 
-  #swagger.responses[201] = {
+  #swagger.responses[200] = {
   description: 'project info get 성공',
   content: {
     "application/json": {
@@ -113,7 +124,7 @@ export const getWorkingProjectInfo = async (req, res, next) => {
 } */
 
   try {
-    const userKey = req.body.userKey;
+    const {userKey} = req.params;
 
     console.log("Router : ", userKey);
     const findProject = await getWorkingProjectService(userKey);
@@ -121,40 +132,43 @@ export const getWorkingProjectInfo = async (req, res, next) => {
     if(!findProject) {
       return next(new HttpException(404, "Project not found"));
   }
-
+    return res.status(200).json({ success: true, data: findProject });
   } catch (error) {
+    console.log(error);
     return error;
   }
+
 };
 
 
 export const getFinishProjectInfo = async (req, res, next) => {
-  /* #swagger.tags = ['getProjectInfo']
-    #swagger.summary = 'project finish info'
-    #swagger.description = 'project finish'
-    #swagger.requestBody = {
-        required: true,
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/SpecificProject" },
-          },
-        }
-      }
-  
-    #swagger.responses[201] = {
-    description: 'project info get 성공',
-    content: {
-      "application/json": {
-        schema: { $ref: "#/components/schemas/SpecificProject" },
-      }
+/* #swagger.tags = ['getProjectInfo']
+  #swagger.summary = 'get finished project info'
+  #swagger.description = 'get finished project info'
+  #swagger.parameters['userKey'] = {
+        in: 'path',                            
+        description: 'get finished project info',                   
+        required: 'true',                     
+        type: 'number',
+        schema: {
+            type : "integer"
+        }        
+  }
+
+  #swagger.responses[200] = {
+  description: 'project info get 성공',
+  content: {
+    "application/json": {
+      schema: { $ref: "#/components/schemas/SpecificProject" },
     }
-  } 
-    #swagger.responses[400] = {
-      description: '잘못된 요청 형식'
-  } */
+  }
+} 
+  #swagger.responses[400] = {
+    description: '잘못된 요청 형식'
+} */
   
     try {
-      const userKey = req.body.userKey;
+      const {userKey} = req.params;
   
       console.log("Router : ", userKey);
       const findProject = await getFinishProjectInfoService(userKey);
@@ -162,8 +176,91 @@ export const getFinishProjectInfo = async (req, res, next) => {
       if(!findProject) {
         return next(new HttpException(404, "Project not found"));
     }
-  
+    return res.status(200).json({ success: true, data: findProject });
     } catch (error) {
       return error;
     }
   };
+
+export const getRecentProjectInfo = async (req, res, next) => {
+/* #swagger.tags = ['getProjectInfo']
+  #swagger.summary = 'get Recent project info'
+  #swagger.description = 'get Recent project info'
+  #swagger.parameters['userKey'] = {
+        in: 'path',                            
+        description: 'get Recent project info',                   
+        required: 'true',                     
+        type: 'number',
+        schema: {
+            type : "integer"
+        }        
+  }
+
+  #swagger.responses[200] = {
+  description: 'project info get 성공',
+  content: {
+    "application/json": {
+      schema: { $ref: "#/components/schemas/SpecificProject" },
+    }
+  }
+} 
+  #swagger.responses[400] = {
+    description: '잘못된 요청 형식'
+} */
+    
+    try {
+      const {userKey} = req.params;
+    
+      console.log("Router : ", userKey);
+      const findProject = await getRecentProjectInfoService(userKey);
+    
+      if(!findProject) {
+          return next(new HttpException(404, "Project not found"));
+      }
+      return res.status(200).json({ success: true, data: findProject });
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    };
+
+export const getLeastProjectInfo = async (req, res, next) => {
+/* #swagger.tags = ['getProjectInfo']
+  #swagger.summary = 'get least project info'
+  #swagger.description = 'get least project info'
+  #swagger.parameters['userKey'] = {
+        in: 'path',                            
+        description: 'get least project info',                   
+        required: 'true',                     
+        type: 'number',
+        schema: {
+            type : "integer"
+        }        
+  }
+
+  #swagger.responses[200] = {
+  description: 'project info get 성공',
+  content: {
+    "application/json": {
+      schema: { $ref: "#/components/schemas/SpecificProject" },
+    }
+  }
+} 
+  #swagger.responses[400] = {
+    description: '잘못된 요청 형식'
+} */
+      
+    try {
+      const {userKey} = req.params;
+      
+      console.log("Router : ", userKey);
+      const findProject = await getLeastProjectInfoService(userKey);
+      
+      if(!findProject) {
+        return next(new HttpException(404, "Project not found"));
+      }
+      return res.status(200).json({ success: true, data: findProject });
+    } catch (error) {
+      return error;
+    }
+};

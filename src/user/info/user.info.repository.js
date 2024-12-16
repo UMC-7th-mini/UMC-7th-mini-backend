@@ -3,12 +3,12 @@ import { PrismaClient } from "@prisma/client"; // PrismaClient 가져오기
 import { nonUser } from "../../project/dtos/project.dto.js";
 
 // 인슽턴스 생성 후 사용
-const prisma = new PrismaClient(); // PrismaClient 인스턴스 생성
+const prisma = new PrismaClient({log: ['query']}); // PrismaClient 인스턴스 생성
 
 export const getUserInfoRepository = async (userKey) => {
-    const user = await prisma.user.findUnique({ // PrismaClient 인스턴스 사용
+    const user = await prisma.User.findUnique({ // PrismaClient 인스턴스 사용
         where: {
-            userKey: userKey, // UserId 대신 id로 수정
+            userKey: parseInt(userKey), // UserId 대신 id로 수정
         }, select: {
             userName: true, // true로 변경
             mbti: true,     // true로 변경
