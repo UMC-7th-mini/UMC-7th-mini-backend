@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
 }
 
 datasource db {
@@ -114,6 +115,7 @@ model ProjectCalendar {
   memoName        String
   calendarDate    DateTime?
   memo            String
+  schedule        DateTime
   projectKey      Int
   privateCalKey   Int?
   project         Project          @relation(fields: [projectKey], references: [projectKey], onDelete: Cascade)
@@ -136,6 +138,8 @@ model ProjectInfo {
 model PrivateCalendar {
   privateCalendarKey Int               @id @default(autoincrement())
   userKey            Int               @unique // 수정: 1:1 관계
+  memo               String
+  schedule           DateTime
   user               User              @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
   projectCalendars   ProjectCalendar[]
   projects           Project[]
