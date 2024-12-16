@@ -13,7 +13,7 @@ import projectRoutes from './project/project.route.js';
 import swaggerUiExpress from "swagger-ui-express";
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
 import { getUserInfo } from './user/info/user.info.controller.js';
-import { getFinishProjectInfo, getProjectInfo, getRecentProjectInfo, getWorkingProjectInfo } from './project/project.controller.js';
+import { getFinishProjectInfo, getProjectInfo, getWorkingProjectInfo } from './project/project.controller.js';
 import { getSpecificProjectInfo } from './project/project.controller.js';
 import swaggerFile from '../swagger/swagger-output.json' with { type: 'json' };
 import swaggerUi from 'swagger-ui-express';
