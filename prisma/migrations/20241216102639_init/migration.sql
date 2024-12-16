@@ -7,7 +7,9 @@ CREATE TABLE `User` (
     `userEmail` VARCHAR(191) NOT NULL,
     `gender` ENUM('MALE', 'FEMALE') NOT NULL,
     `birth` DATETIME(3) NOT NULL,
-    `mbti` ENUM('INTJ', 'INTP', 'ENTJ', 'ENTP', 'INFJ', 'INFP', 'ENFJ', 'ENFP', 'ISTJ', 'ISFJ', 'ESTJ', 'ESFJ', 'ISTP', 'ISFP', 'ESTP', 'ESFP') NOT NULL,
+    `role` VARCHAR(191) NULL,
+    `mbti` ENUM('INTJ', 'INTP', 'ENTJ', 'ENTP', 'INFJ', 'INFP', 'ENFJ', 'ENFP', 'ISTJ', 'ISFJ', 'ESTJ', 'ESFJ', 'ISTP', 'ISFP', 'ESTP', 'ESFP') NULL,
+    `token` VARCHAR(191) NULL,
 
     UNIQUE INDEX `User_userId_key`(`userId`),
     PRIMARY KEY (`userKey`)
@@ -62,6 +64,7 @@ CREATE TABLE `ProjectCalendar` (
     `memoName` VARCHAR(191) NOT NULL,
     `calendarDate` DATETIME(3) NULL,
     `memo` VARCHAR(191) NOT NULL,
+    `schedule` DATETIME(3) NOT NULL,
     `projectKey` INTEGER NOT NULL,
     `privateCalKey` INTEGER NULL,
 
@@ -83,6 +86,8 @@ CREATE TABLE `ProjectInfo` (
 CREATE TABLE `PrivateCalendar` (
     `privateCalendarKey` INTEGER NOT NULL AUTO_INCREMENT,
     `userKey` INTEGER NOT NULL,
+    `memo` VARCHAR(191) NOT NULL,
+    `schedule` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `PrivateCalendar_userKey_key`(`userKey`),
     PRIMARY KEY (`privateCalendarKey`)

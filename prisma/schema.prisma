@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "windows"]
 }
 
@@ -57,10 +57,11 @@ model User {
   birth              DateTime
   role               String?
   mbti               Mbti?
-  plantDicts         PlantDict[]          // 1:N 관계
-  projects           ProjectInfo[]        // N:M 관계
-  taskTables         TaskTable[]          // 1:N 관계
-  privateCalendar    PrivateCalendar?     // 1:1 관계
+  token              String?
+  plantDicts         PlantDict[] // 1:N 관계
+  projects           ProjectInfo[] // N:M 관계
+  taskTables         TaskTable[] // 1:N 관계
+  privateCalendar    PrivateCalendar? // 1:1 관계
   PlantDictPlantLink PlantDictPlantLink[] // N:M 관계
 }
 
@@ -96,17 +97,17 @@ model Plant {
 
 // TaskTable 모델
 model TaskTable {
-  taskKey         Int              @id @default(autoincrement())
-  taskName        String
-  taskProgress    String
-  taskStartDate   DateTime
-  taskEndDate     DateTime
-  userKey         Int
-  projectKey      Int
+  taskKey            Int              @id @default(autoincrement())
+  taskName           String
+  taskProgress       String
+  taskStartDate      DateTime
+  taskEndDate        DateTime
+  userKey            Int
+  projectKey         Int
   projectCalendarKey Int?
-  user            User             @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
-  project         Project          @relation(fields: [projectKey], references: [projectKey], onDelete: Cascade)
-  projectCalendar ProjectCalendar? @relation(fields: [projectCalendarKey], references: [memoKey], onDelete: SetNull)
+  user               User             @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
+  project            Project          @relation(fields: [projectKey], references: [projectKey], onDelete: Cascade)
+  projectCalendar    ProjectCalendar? @relation(fields: [projectCalendarKey], references: [memoKey], onDelete: SetNull)
 }
 
 // ProjectCalendar 모델
@@ -147,21 +148,19 @@ model PrivateCalendar {
 
 // Project 모델
 model Project {
-  projectKey      Int              @id @default(autoincrement())
-  totalPeople     Int
-  totalProgress   Int
-  startDate       DateTime
-  endDate         DateTime
-  projectName     String
-  taskCount       Int
-  plantKey        Int?             // 1:1 관계
-  privateCalKey   Int?
-  currentProgress String
-  taskTables      TaskTable[]
+  projectKey       Int               @id @default(autoincrement())
+  totalPeople      Int
+  totalProgress    Int
+  startDate        DateTime
+  endDate          DateTime
+  projectName      String
+  taskCount        Int
+  plantKey         Int? // 1:1 관계
+  privateCalKey    Int?
+  currentProgress  String
+  taskTables       TaskTable[]
   projectCalendars ProjectCalendar[] // 수정: 1:N 관계로 변경
-  privateCalendar PrivateCalendar? @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: SetNull)
-  plant           Plant?           @relation(fields: [plantKey], references: [plantKey], onDelete: SetNull)
-  projectInfos    ProjectInfo[]
+  privateCalendar  PrivateCalendar?  @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: SetNull)
+  plant            Plant?            @relation(fields: [plantKey], references: [plantKey], onDelete: SetNull)
+  projectInfos     ProjectInfo[]
 }
-
-

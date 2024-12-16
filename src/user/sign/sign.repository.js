@@ -1,12 +1,22 @@
 import { PrismaClient } from "@prisma/client";
-
+import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 const signUpRepository = async signUpData => {
   try {
-    console.log("repoSign", signUpData);
+    const { userId, userName, userPassword, userEmail, gender, birth } =
+      signUpData;
+
+    const hashedPassword = await bcrypt.hash(userPassword, 10);
     const user = await prisma.user.create({
-      data: signUpData,
+      data: {
+        userId,
+        userName,
+        userPassword: hashedPassword,
+        userEmail,
+        gender,
+        birth,
+      },
     });
     return user;
   } catch (error) {

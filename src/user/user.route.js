@@ -1,5 +1,6 @@
 import express from "express";
 import signRouter from "./sign/sign.route.js";
+import authRouter from "./login/login.route.js";
 
 const router = express.Router();
 
@@ -10,5 +11,6 @@ router.get("/", (req, res) => {
 
 // /user/sign 경로 설정
 router.use("/sign", signRouter);
+router.use("/auth", authRouter);
 
 export default router;
