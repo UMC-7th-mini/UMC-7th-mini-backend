@@ -6,7 +6,7 @@ const doc = {
         title: "User API",
         description: "API 문서",
     },
-    host: "3.34.133.236",
+    host: "umc-d.kro.kr:3000",
     basePath: "/",
     schemes: ['http'],
     consumes: ['application/json'],

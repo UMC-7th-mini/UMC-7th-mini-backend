@@ -29,17 +29,16 @@ app.use(
   swaggerUiExpress.setup(swaggerFile)
 );
 
-app.use((req, res, next) => {
-  if (req.protocol === 'http') {
-    console.log('HTTP 요청 처리 중');
-  }
-  next();
-});
+// CORS 설정 - 모든 도메인 허용 (혹은 특정 도메인만 허용하도록 수정 가능)
+app.use(cors({
+  origin: 'http://umc-d.kro.kr', // 특정 도메인만 허용 (예시)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // 허용할 HTTP 메소드
+  allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 헤더
+}));
 
 // 미들웨어 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: "*" }));
 app.use(compression());
 app.use(morgan('dev'));
 
@@ -61,6 +60,11 @@ app.post("/projects/info", getProjectInfo);
 app.post("/projects/:projectKey/info", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
 app.post("/projects/info/progress", getWorkingProjectInfo); // 프로젝트 진행 중
 app.post("/projects/info/finish", getFinishProjectInfo); // 프로젝트 끝
+
+
+app.get("/projects/info/recent", getRecentProjectInfo);
+app.get("/projects/info/least", getLeastProjectInfo);
+
 
 
 // 이예지
