@@ -16,12 +16,15 @@ import { notFoundHandler, errorHandler } from "./middlewares/errorHandler.js";
 import { getUserInfo } from "./user/info/user.info.controller.js";
 import {
   getFinishProjectInfo,
+  getLeastProjectInfo,
   getProjectInfo,
+  getRecentProjectInfo,
   getWorkingProjectInfo,
 } from "./project/project.controller.js";
 import { getSpecificProjectInfo } from "./project/project.controller.js";
 import swaggerFile from "../swagger/swagger-output.json" with { type: "json" };
 import swaggerUi from "swagger-ui-express";
+import { authenticateToken } from "./user/middlewares/jwt.js";
 
 dotenv.config(); // dotenv 설정
 
@@ -57,15 +60,16 @@ app.use("/users", userRoutes);
 // app.use("/calendar", calendarRoutes);
 // app.use("/projects", projectRoutes);
 
-app.get("/users/info/:userKey", getUserInfo);
-app.get("/projects/allinfo/:userKey", getProjectInfo);
-app.get("/projects/info/specify/:userKey/:projectKey", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
-app.get("/projects/info/progress/:userKey", getWorkingProjectInfo); // 프로젝트 진행 중 (못 고침)
-app.get("/projects/info/finish/:userKey", getFinishProjectInfo); // 프로젝트 끝
+
+app.get("/users/info", authenticateToken, getUserInfo);
+app.get("/projects/info/all", authenticateToken, getProjectInfo);
+app.get("/projects/info/specify/:projectKey", authenticateToken, getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
+app.get("/projects/info/progress", authenticateToken, getWorkingProjectInfo); // 프로젝트 진행 중 (못 고침)
+app.get("/projects/info/finish", authenticateToken, getFinishProjectInfo); // 프로젝트 끝
 
 
-app.get("/projects/info/recent/:userKey", getRecentProjectInfo); // 최근 프로젝트 조회
-app.get("/projects/info/least/:userKey", getLeastProjectInfo); // 오래된 프로젝트 조회
+app.get("/projects/info/recent", authenticateToken, getRecentProjectInfo); // 최근 프로젝트 조회
+app.get("/projects/info/least", authenticateToken, getLeastProjectInfo); // 오래된 프로젝트 조회
 
 
 // 404 처리 미들웨어

@@ -28,8 +28,9 @@ export const getUserInfo = async (req, res, next) => {
 } */
   
     try {
-        const {userKey} = req.params; // 쿼리에서 userKey 가져오기
-        console.log(userKey);
+        const { key, id } = req.user; // 쿼리에서 userKey 가져오기
+        
+        let userKey = key;
         
         // userKey를 정수형으로 변환
         if (!(userKey)) {

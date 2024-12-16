@@ -28,7 +28,10 @@ export const getProjectInfo = async (req, res, next) => {
     description: '잘못된 요청 형식'
 } */
     try {
-        const { userKey } = req.params; // 요청 본문에서 userKey 가져오기
+      const { key, id } = req.user; // 쿼리에서 userKey 가져오기
+        
+      let userKey = key;
+
         console.log(userKey);
         const project = await getProjectInfoService(userKey);
         
@@ -81,8 +84,11 @@ export const getSpecificProjectInfo = async (req, res, next) => {
     description: '잘못된 요청 형식'
 } */
     try {
-        const { userKey, projectKey} = req.params;
-
+        const { key, id } = req.user;
+        const { projectKey } = req.params;
+        
+        let userKey = key;
+        
         console.log("Router : ",userKey, projectKey);
       
         const findProject = await getSpecificProjectInfoService(userKey, projectKey); 
@@ -124,7 +130,9 @@ export const getWorkingProjectInfo = async (req, res, next) => {
 } */
 
   try {
-    const {userKey} = req.params;
+    const { key, id } = req.user; // 쿼리에서 userKey 가져오기
+        
+    let userKey = key;
 
     console.log("Router : ", userKey);
     const findProject = await getWorkingProjectService(userKey);
@@ -168,8 +176,10 @@ export const getFinishProjectInfo = async (req, res, next) => {
 } */
   
     try {
-      const {userKey} = req.params;
-  
+      const { key, id } = req.user; // 쿼리에서 userKey 가져오기
+        
+      let userKey = key;
+
       console.log("Router : ", userKey);
       const findProject = await getFinishProjectInfoService(userKey);
   
@@ -209,8 +219,10 @@ export const getRecentProjectInfo = async (req, res, next) => {
 } */
     
     try {
-      const {userKey} = req.params;
-    
+      const { key, id } = req.user; // 쿼리에서 userKey 가져오기
+        
+      let userKey = key;
+
       console.log("Router : ", userKey);
       const findProject = await getRecentProjectInfoService(userKey);
     
@@ -251,8 +263,10 @@ export const getLeastProjectInfo = async (req, res, next) => {
 } */
       
     try {
-      const {userKey} = req.params;
-      
+      const { key, id } = req.user; // 쿼리에서 userKey 가져오기
+        
+      let userKey = key;
+
       console.log("Router : ", userKey);
       const findProject = await getLeastProjectInfoService(userKey);
       
