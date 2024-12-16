@@ -13,7 +13,7 @@ import projectRoutes from './project/project.route.js';
 import swaggerUiExpress from "swagger-ui-express";
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
 import { getUserInfo } from './user/info/user.info.controller.js';
-import { getFinishProjectInfo, getProjectInfo, getWorkingProjectInfo } from './project/project.controller.js';
+import { getFinishProjectInfo, getProjectInfo, getRecentProjectInfo, getWorkingProjectInfo } from './project/project.controller.js';
 import { getSpecificProjectInfo } from './project/project.controller.js';
 import swaggerFile from '../swagger/swagger-output.json' with { type: 'json' };
 import swaggerUi from 'swagger-ui-express';
@@ -62,8 +62,8 @@ app.post("/projects/info/progress", getWorkingProjectInfo); // 프로젝트 진�
 app.post("/projects/info/finish", getFinishProjectInfo); // 프로젝트 끝
 
 
-app.get("/projects/info/recent", getRecentProjectInfo);
-app.get("/projects/info/least", getLeastProjectInfo);
+// app.get("/projects/info/recent", getRecentProjectInfo);
+// app.get("/projects/info/least", getLeastProjectInfo);
 
 
 
