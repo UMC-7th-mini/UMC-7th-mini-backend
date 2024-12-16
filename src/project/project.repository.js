@@ -71,30 +71,43 @@ export const getUserMatchProject = async (userKey) => {
 export const getUserMatchProjectRepository = async (userKey, projectKey) => {
     const projectInfo = await prisma.projectInfo.findFirst({
         where: {
-            userKey: parseInt(userKey),
-            projectKey: parseInt(projectKey),
+            userKey: parseInt(userKey), // userKey 필터링
+            projectKey: parseInt(projectKey), // projectKey 필터링
         },
         include: {
             project: { // Project 테이블과 조인
                 select: {
                     projectName: true,
                     totalProgress: true,
-                    taskCount : true,
+                    taskCount: true,
                     startDate: true,
                     endDate: true,
-                }
-            }
-        }
+                    taskTables: { // TaskTable 데이터 포함
+                        select: {
+                            userKey : true,
+                            taskKey: true,
+                            taskName: true,
+                            taskProgress: true,
+                            taskStartDate: true,
+                            taskEndDate: true,
+                        },
+                    },
+                },
+            },
+        },
     });
 
-    console.log("repository : ", projectInfo);
+    console.log("Repository result:", JSON.stringify(projectInfo, null, 2));
 
     if (!projectInfo) {
         throw new HttpException(404, "Project not found");
     }
 
-    // project 필드에 포함된 Project 정보를 반환
-    return projectInfo.project;
+    // project 필드에 포함된 Project 정보 반환
+    return {
+        ...projectInfo.project,
+        tasks: projectInfo.project.taskTables, // TaskTable 정보 추가
+    };
 };
 
 
@@ -275,7 +288,6 @@ export const addTask = async (data, key) => {
     }});
     return created.id;
 };
-
 
 
 
