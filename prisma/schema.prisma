@@ -55,7 +55,8 @@ model User {
   userEmail          String
   gender             Gender
   birth              DateTime
-  mbti               Mbti
+  role               String?
+  mbti               Mbti?
   plantDicts         PlantDict[]          // 1:N 관계
   projects           ProjectInfo[]        // N:M 관계
   taskTables         TaskTable[]          // 1:N 관계
@@ -105,21 +106,42 @@ model TaskTable {
   projectCalendarKey Int?
   user            User             @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
   project         Project          @relation(fields: [projectKey], references: [projectKey], onDelete: Cascade)
-  projectCalendar ProjectCalendar? @relation(fields: [projectCalendarKey], references: [memoKey], onDelete: SetNull)
+  projectCalendar ProjectCalendar? @relation(fields: [projectCalendarKey], references: [projectCalKey], onDelete: SetNull)
+}
+
+model Schedule {
+  scheduleKey       Int              @id @default(autoincrement())
+  calendarDate      DateTime?      
+  scheduleDetails   String?      
+  privateCalKey     Int?            
+  privateCalendar   PrivateCalendar? @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: Cascade)
+
+  projectCalKey     Int?
+  projectCalendar   ProjectCalendar? @relation(fields: [projectCalKey], references: [projectCalKey], onDelete: Cascade)
+}
+
+model Memo {
+  memoKey           Int              @id @default(autoincrement())
+  content           String?       
+
+  privateCalKey     Int?             
+  privateCalendar   PrivateCalendar?   @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: Cascade)
+
+  projectCalKey     Int?
+  projectCalendar   ProjectCalendar? @relation(fields: [projectCalKey], references: [projectCalKey], onDelete: Cascade)
 }
 
 // ProjectCalendar 모델
 model ProjectCalendar {
-  memoKey         Int              @id @default(autoincrement())
-  memoName        String
+  projectCalKey   Int              @id @default(autoincrement())
   calendarDate    DateTime?
-  memo            String
-  schedule        DateTime
-  projectKey      Int
-  privateCalKey   Int?
+  projectKey      Int              @unique
   project         Project          @relation(fields: [projectKey], references: [projectKey], onDelete: Cascade)
-  privateCalendar PrivateCalendar? @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: SetNull)
   taskTables      TaskTable[]
+  memos           Memo[]          
+  schedules       Schedule[]   
+
+  privateCalendars PrivateCalendar[] @relation("UserProjectCalendars")
 }
 
 // ProjectInfo 모델
@@ -137,11 +159,13 @@ model ProjectInfo {
 model PrivateCalendar {
   privateCalendarKey Int               @id @default(autoincrement())
   userKey            Int               @unique // 수정: 1:1 관계
-  memo               String
-  schedule           DateTime
+  calendarDate       DateTime?
   user               User              @relation(fields: [userKey], references: [userKey], onDelete: Cascade)
-  projectCalendars   ProjectCalendar[]
+  
+  projectCalendars   ProjectCalendar[] @relation("UserProjectCalendars")
   projects           Project[]
+  schedules          Schedule[]      
+  memos              Memo[] 
 }
 
 // Project 모델
@@ -157,7 +181,7 @@ model Project {
   privateCalKey   Int?
   currentProgress String
   taskTables      TaskTable[]
-  projectCalendars ProjectCalendar[] // 수정: 1:N 관계로 변경
+  projectCalendar ProjectCalendar[] 
   privateCalendar PrivateCalendar? @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: SetNull)
   plant           Plant?           @relation(fields: [plantKey], references: [plantKey], onDelete: SetNull)
   projectInfos    ProjectInfo[]

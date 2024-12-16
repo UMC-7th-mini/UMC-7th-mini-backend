@@ -17,10 +17,10 @@ calendarRouter.get("/", (req, res) => {
 */
 
 //개인 캘린더 조회
-calendarRouter.get("/privatecalendar/:userKey", calendarController.getPrivateCalendarController);
+calendarRouter.get("/privatecalendar/:userKey/:year/:month", calendarController.getPrivateCalendarController);
 
 //개인 메모 추가
-calendarRouter.post("/privatecalendar/:userKey/memo", calendarController.addPrivateCalendarMemoController);
+calendarRouter.post("/privatecalendar/:privateCalKey/memo", calendarController.addPrivateCalendarMemoController);
 
 //개인 메모 조회
 calendarRouter.get("/privatecalendar/:userKey/memo", calendarController.getPrivateCalendarMemoController);
@@ -44,25 +44,25 @@ calendarRouter.get("/projectcalendar/:projectKey/projectInfo", calendarControlle
 
 
 //프로젝트 캘린더 조회
-calendarRouter.get("/calendar/projectcalendar/:projectKey", calendarController.getProjectCalendarController);
+calendarRouter.get("/projectcalendar/:projectKey/:year/:month", calendarController.getProjectCalendarController);
 
 //프로젝트 캘린더에 메모 추가
-calendarRouter.post("/calendar/projectcalendar/:projectKey/memo", calendarController.addProjectCalendarMemoController);
+calendarRouter.post("/projectcalendar/:projectKey/memo", calendarController.addProjectCalendarMemoController);
 
 //프로젝트 메모 조회
-calendarRouter.get("/calendar/projectcalendar/:projectKey/memo", calendarController.getProjectCalendarMemoController);
+calendarRouter.get("/projectcalendar/:projectKey/memo", calendarController.getProjectCalendarMemoController);
 
 //프로젝트 메모 삭제
-calendarRouter.delete("/calendar/projectcalendar/:projectKey/memo", calendarController.deleteProjectCalendarMemoController);
+calendarRouter.delete("/projectcalendar/:projectKey/memo", calendarController.deleteProjectCalendarMemoController);
 
 //프로젝트 일정 추가
-calendarRouter.post("/calendar/projectcalendar/:projectKey/schedule", calendarController.addProjectScheduleController);
+calendarRouter.post("/projectcalendar/:projectKey/schedule", calendarController.addProjectScheduleController);
 
 //프로젝트 일정 조회 
-calendarRouter.get("/calendar/projectcalendar/:projectKey/schedule", calendarController.getProjectCalendarScheduleController);
+calendarRouter.get("/projectcalendar/:projectKey/schedule", calendarController.getProjectCalendarScheduleController);
 
 //프로젝트 일정 삭제 
-calendarRouter.delete("/calendar/projectcalendar/:projectKey/schedule", calendarController.deleteProjectCalendarScheduleController);
+calendarRouter.delete("/projectcalendar/:projectKey/schedule", calendarController.deleteProjectCalendarScheduleController);
 
 
 export default calendarRouter;

@@ -9,7 +9,10 @@ import * as CalendarService from "./calendar.service.js"
 export const getPrivateCalendarController = async (req,res, next) => {
     try {
         const userKey = parseInt(req.params.userKey);
-        const calendars = await CalendarService.getPrivateCalendarService(userKey);
+        const year = parseInt(req.params.year); 
+        const month = parseInt(req.params.month); 
+
+        const calendars = await CalendarService.getPrivateCalendarService(userKey, year, month);
         return res.status(StatusCodes.OK).success(calendars);
     } catch (error) {
         console.error(error);
@@ -19,19 +22,15 @@ export const getPrivateCalendarController = async (req,res, next) => {
 
 //개인 메모 추가
 export const addPrivateCalendarMemoController = async (req,res, next) => {
-    const userKey = req.params.userKey;
-    const { calendarDate, memo, memoName } = req.body;
+    const privateCalKey = req.params.privateCalKey;
+    const { content } = req.body;
     console.log("data : ", req.body);
 
-    const formattedDate = dayjs(calendarDate).toISOString();
-
     const newMemo = await CalendarService.createPrivateMemoService({
-        userKey, 
-        calendarDate: formattedDate, 
-        memo, 
-        memoName,
+        privateCalKey, 
+        content, 
     });
-    const privateCalendarKey = newMemo.privateCalendarKey;
+    const privateCalendarKey = newMemo.privateCalKey;
     const privateMemo = await calendarRepository.getPrivateMemo(privateCalendarKey); 
 
     res.status(StatusCodes.OK).json({ result: privateMemo });
@@ -125,7 +124,10 @@ export const getProjectInfoController = async (req,res, next) => {
 export const getProjectCalendarController = async (req,res, next) => {
     try {
         const projectKey = parseInt(req.params.projectKey);
-        const calendars = await CalendarService.getProjectCalendarService(projectKey);
+        const year = parseInt(req.params.year); 
+        const month = parseInt(req.params.month); 
+
+        const calendars = await CalendarService.getProjectCalendarService(projectKey, year, month);
         return res.status(StatusCodes.OK).success(calendars);
     } catch (error) {
         console.error(error);

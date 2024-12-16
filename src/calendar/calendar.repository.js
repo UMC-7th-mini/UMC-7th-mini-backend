@@ -1,11 +1,15 @@
 import { PrismaClient } from "@prisma/client";
+import dayjs from 'dayjs';
 
 const prisma = new PrismaClient();
 
 // 개인 캘린더 조회 
-export const getPrivateCalendar = async (userKey)=> {
+export const getPrivateCalendar = async (userKey, year, month)=> {
     try {
-        const privateCalendar = await prisma.PrivateCalendar.findUniqueOrThrow({ where: { userKey: userKey } });
+        const startDate = dayjs(`${year}-${month}-01`).startOf('month'); 
+        const endDate = dayjs(startDate).endOf('month'); 
+
+        const privateCalendar = await prisma.PrivateCalendar.findMany({ where: { userKey: userKey, gte: startDate.toDate(), lte: endDate.toDate() } });
         return privateCalendar;
     } catch (error){
         console.error("개인 캘린더 조회 중 오류: ",error);
@@ -16,15 +20,11 @@ export const getPrivateCalendar = async (userKey)=> {
 // 개인 메모 추가 - 한번 수정하기
 export const addPrivateMemo = async (data) => {
     try {
-        const createdMemo = await prisma.ProjectCalendar.create({
-          data: {
-            calendarDate: data.calendarDate,
-            memo: data.memo,
-            memoName: data.memoName,
-            project: {
-                connect: { projectKey: data.projectKey } 
+        const createdMemo = await prisma.PrivateCalendar.create({
+            data: {
+                content: data.memo, 
+                privateCalKey: data.privateCalKey, 
             }
-          }
         });
         return createdMemo;
     } catch (err) {
@@ -34,13 +34,10 @@ export const addPrivateMemo = async (data) => {
 };
 
 //개인 메모 조회 
-export const getPrivateMemo = async (privateCalendarKey) => {
+export const getPrivateMemo = async (privateCalKey) => {
     try {
-        if (typeof privateCalendarKey !== 'number') {
-            throw new Error("privateCalendarKey는 정수여야 합니다.");
-        }
         const privateMemo = await prisma.PrivateCalendar.findUniqueOrThrow({
-            where: { privateCalendarKey: privateCalendarKey }
+            where: { privateCalKey: privateCalKey }
         });
         return privateMemo;
     } catch (error){
@@ -124,9 +121,9 @@ export const getProjectInfo = async(projectKey)=> {
 };
 
 // 프로젝트 캘린더 조회 
-export const getProjectCalendar = async (userKey, projectKey)=> {
+export const getProjectCalendar = async (projectKey, year, month)=> {
     try {
-        const projectCalendar = await prisma.ProjectCalendar.findUniqueOrThrow({ where: { userKey: userKey, projectKey : projectKey } });
+        const projectCalendar = await prisma.ProjectCalendar.findMany({ where: { projectKey : projectKey, year : year, month : month } });
         return projectCalendar;
     } catch (error){
         console.error("개인 캘린더 조회 중 오류: ",error);
@@ -138,14 +135,17 @@ export const getProjectCalendar = async (userKey, projectKey)=> {
 export const addProjectMemo = async (data) => {
     try {
         const createdMemo = await prisma.ProjectCalendar.create({
-          data: {
-            calendarDate: data.calendarDate,
-            memo: data.memo,
-            memoName: data.memoName,
-            project: {
-                connect: { projectKey: data.projectKey } 
+            data: {
+                calendarDate: data.calendarDate,
+                memos: {
+                    create: {
+                        content: data.memo, 
+                    },
+                },
+                project: {
+                    connect: { projectCalKey: data.projectCalKey }
+                }
             }
-          }
         });
         return createdMemo;
     } catch (err) {

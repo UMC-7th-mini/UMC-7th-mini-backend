@@ -126,9 +126,6 @@ ALTER TABLE `TaskTable` ADD CONSTRAINT `TaskTable_projectKey_fkey` FOREIGN KEY (
 ALTER TABLE `TaskTable` ADD CONSTRAINT `TaskTable_projectCalendarKey_fkey` FOREIGN KEY (`projectCalendarKey`) REFERENCES `ProjectCalendar`(`memoKey`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `ProjectCalendar` ADD CONSTRAINT `ProjectCalendar_projectKey_fkey` FOREIGN KEY (`projectKey`) REFERENCES `Project`(`projectKey`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `ProjectCalendar` ADD CONSTRAINT `ProjectCalendar_privateCalKey_fkey` FOREIGN KEY (`privateCalKey`) REFERENCES `PrivateCalendar`(`privateCalendarKey`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey

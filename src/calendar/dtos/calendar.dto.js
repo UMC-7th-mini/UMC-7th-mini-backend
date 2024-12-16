@@ -8,6 +8,9 @@ export const GetPrivateCalendarDto = (body) => ({
 */
 
 const calculateCalendarRange = (year, month) => {
+    if (isNaN(year) || isNaN(month)) {
+        throw new Error("유효하지 않은 연도 또는 월입니다.");
+    }
     const firstDayOfMonth = new Date(year, month, 1); 
     const startDay = new Date(firstDayOfMonth); 
     startDay.setDate(1 - firstDayOfMonth.getDay()); 
@@ -43,6 +46,10 @@ const generateAdditionalDates = (startDay, endDay, numDays = 5) => {
 
 // 개인 캘린더 조회 응답 DTO -> 수정 
 export const GetPrivateCalendarResponseDto = (data) => {
+    if (!data.year || !data.month) {
+        throw new Error("유효하지 않은 연도 또는 월입니다.");
+    }
+
     const { startDay, endDay } = calculateCalendarRange(data.year, data.month - 1); // month는 0부터 시작
     const { previousDates, nextDates } = generateAdditionalDates(startDay, endDay);
     
@@ -90,22 +97,20 @@ export const Schedule = (scheduleKey, schedule, startDate, endDate) => ({
     endDate,
 });
 
-/*
+
 // 개인 메모 추가 요청 DTO
-export const CreateMemoDto = (body) => ({
-    userKey: body.userKey,
-    calendarDate: body.calendarDate, 
-    memo: body.memo, 
-    projectKey: body.projectKey,
+export const CreateMemoDto = (data) => ({
+    privateCalKey: data.privateCalKey,
+    scheduleKey: data.scheduleKey, 
+    content: data.content,
 });
-*/
+
 
 // 개인 메모 추가 응답 DTO
 export const CreateMemoResponseDto = (data) => ({
     memoKey: data.memoKey,
-    userKey: data.userKey,
-    calendarDate: data.calendarDate,
-    memo: data.memo,
+    privateCalKey: data.privateCalKey,
+    content: data.content,
 });
 
 /*
@@ -118,11 +123,11 @@ export const GetMemoDto = (body) => ({
 
 // 개인 메모 조회 응답 DTO
 export const GetMemoResponseDto = (data) => ({
-    userKey: data.userKey,
+    privateCalKey: data.privateCalKey,
     calendarDate: data.calendarDate,
     memos: data.memos.map(memo => ({
       memoKey: memo.memoKey,
-      memo: memo.memo,
+      content: memo.content,
     })),
 });
   
@@ -210,6 +215,10 @@ export const GetProjectInfoResponseDto = (data) => ({
 
 // 프로젝트 캘린더 조회 응답 DTO
 export const GetProjectCalendarResponseDto = (data) => {
+    if (!data.year || !data.month) {
+        throw new Error("유효하지 않은 연도 또는 월입니다.");
+    }
+
     const { startDay, endDay } = calculateCalendarRange(data.year, data.month - 1); // month는 0부터 시작
     const { previousDates, nextDates } = generateAdditionalDates(startDay, endDay);
 
@@ -240,10 +249,8 @@ export const GetProjectCalendarResponseDto = (data) => {
 // 프로젝트 메모 추가 응답 DTO
 export const CreateProjectMemoResponseDto = (data) => ({
     memoKey: data.memoKey,
-    projectKey : data.projectKey,
-    userKey: data.userKey,
-    calendarDate: data.calendarDate,
-    memo: data.memo,
+    projectCalKey : data.projectCalKey,
+    content: data.content,
 });
 
 // 프로젝트 메모 조회 응답 DTO

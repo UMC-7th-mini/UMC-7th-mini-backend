@@ -2,9 +2,9 @@ import * as calendarRepository from "./calendar.repository.js";
 import * as calendarDto from "./dtos/calendar.dto.js";
 
 // 개인 캘린더 조회
-export const getPrivateCalendarService = async (privateCalendarKey) => {
+export const getPrivateCalendarService = async (userKey, year, month) => {
     try {
-        const privateCalendars = await calendarRepository.getPrivateCalendar(privateCalendarKey);
+        const privateCalendars = await calendarRepository.getPrivateCalendar(userKey, year, month);
         if(!privateCalendars){
            throw new Error("개인 캘린더를 찾을 수 없습니다.");
         }
@@ -18,17 +18,15 @@ export const getPrivateCalendarService = async (privateCalendarKey) => {
 // 개인 메모 추가
 export const createPrivateMemoService = async (data) => {
     const createKey = await calendarRepository.addPrivateMemo({
-        userKey: data.userKey,
-        calendarDate: data.calendarDate,
-        memo: data.memo,
+        privateCalKey: data.privateCalKey,
+        content: data.content,
     });
     
-    if (!createKey.privateCalendarKey) {
-        throw new Error("privateCalendarKey가 존재하지 않습니다.");
+    if (!createKey.memoKey) {
+        throw new Error("memoKey가 존재하지 않습니다.");
     }
     
-    const memo = await calendarRepository.getPrivateMemo(createKey.privateCalendarKey);
-    return calendarDto.CreateMemoResponseDto(memo);
+    return calendarDto.CreateMemoResponseDto(createKey);
 }
 
 // 개인 메모 조회
@@ -106,7 +104,7 @@ export const deletePrivateScheduleService = async (data) => {
 }
 
 // 프로젝트 정보 조회 
-export const getProjectInfoService = async (data) => {
+export const getProjectInfoService = async (projectKey) => {
     try {
         const projectInfos = await calendarRepository.getProjectInfo(projectKey);
         if(!projectInfos){
@@ -120,9 +118,9 @@ export const getProjectInfoService = async (data) => {
 };
 
 // 프로젝트 캘린더 조회
-export const getProjectCalendarService = async (projectKey) => {
+export const getProjectCalendarService = async (projectKey, year, month) => {
     try {
-        const projectCalendars = await calendarRepository.getProjectCalendar(projectKey);
+        const projectCalendars = await calendarRepository.getProjectCalendar(projectKey, year, month);
         if(!projectCalendars){
            throw new Error("프로젝트 캘린더를 찾을 수 없습니다.");
         }
@@ -136,7 +134,7 @@ export const getProjectCalendarService = async (projectKey) => {
 // 프로젝트 메모 추가
 export const createProjectMemoService = async (data) => {
     const createKey = await calendarRepository.addProjectMemo({
-        projectKey : projectKey,
+        projectKey : data.projectKey,
         userKey: data.userKey,
         calendarDate: data.calendarDate,
         memo: data.memo,
