@@ -6,15 +6,7 @@ export const getUserInfo = async (req, res, next) => {
 /* #swagger.tags = ['userinfo']
   #swagger.summary = 'Userget info'
   #swagger.description = 'userinfo get'
-  #swagger.parameters['userKey'] = {
-        in: 'path',                            
-        description: 'get user info',                   
-        required: 'true',                     
-        type: 'number',
-        schema: {
-            type : "integer"
-        }        
-  }
+  
   #swagger.responses[200] = {
   description: 'User info get 성공',
   content: {
