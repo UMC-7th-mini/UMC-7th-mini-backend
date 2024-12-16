@@ -1,33 +1,35 @@
-import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import compression from 'compression';
-import dotenv from 'dotenv';
-
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import compression from "compression";
+import dotenv from "dotenv";
+//import bodyParser from "body-parser";
+import jwt from "jsonwebtoken";
 // 라우터 파일 가져오기
-import userRoutes from './user/user.route.js';
+import userRoutes from "./user/user.route.js";
 // import calendarRouter from './calendar/calendar.route.js';
-import projectRoutes from './project/project.route.js';
+import projectRoutes from "./project/project.route.js";
 
 // 오류 처리 미들웨어 가져오기
 import swaggerUiExpress from "swagger-ui-express";
-import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
-import { getUserInfo } from './user/info/user.info.controller.js';
-import { getFinishProjectInfo, getLeastProjectInfo, getProjectInfo, getRecentProjectInfo, getWorkingProjectInfo } from './project/project.controller.js';
-import { getSpecificProjectInfo } from './project/project.controller.js';
-import swaggerFile from '../swagger/swagger-output.json' with { type: 'json' };
-import swaggerUi from 'swagger-ui-express';
+import { notFoundHandler, errorHandler } from "./middlewares/errorHandler.js";
+import { getUserInfo } from "./user/info/user.info.controller.js";
+import {
+  getFinishProjectInfo,
+  getProjectInfo,
+  getWorkingProjectInfo,
+} from "./project/project.controller.js";
+import { getSpecificProjectInfo } from "./project/project.controller.js";
+import swaggerFile from "../swagger/swagger-output.json" with { type: "json" };
+import swaggerUi from "swagger-ui-express";
 
 dotenv.config(); // dotenv 설정
 
 const app = express();
 const port = 3000;
 
-app.use(
-  "/docs",
-  swaggerUiExpress.serve,
-  swaggerUiExpress.setup(swaggerFile)
-);
+app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerFile));
+
 
 // CORS 설정 - 모든 도메인 허용 (혹은 특정 도메인만 허용하도록 수정 가능)
 // app.use(cors({
@@ -38,15 +40,14 @@ app.use(
 
 app.use(cors());
 
+
 // 미들웨어 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
-
-
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // 라우터 설정
 
@@ -56,7 +57,6 @@ app.use("/users", userRoutes);
 // app.use("/calendar", calendarRoutes);
 // app.use("/projects", projectRoutes);
 
-// jun
 app.get("/users/info/:userKey", getUserInfo);
 app.get("/projects/allinfo/:userKey", getProjectInfo);
 app.get("/projects/info/specify/:userKey/:projectKey", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
@@ -66,6 +66,7 @@ app.get("/projects/info/finish/:userKey", getFinishProjectInfo); // 프로젝트
 
 app.get("/projects/info/recent/:userKey", getRecentProjectInfo); // 최근 프로젝트 조회
 app.get("/projects/info/least/:userKey", getLeastProjectInfo); // 오래된 프로젝트 조회
+
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);

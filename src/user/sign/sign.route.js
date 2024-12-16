@@ -4,6 +4,7 @@ import {
   signUpDuplicateController,
   signOutController,
 } from "./sign.controller.js";
+import { authenticateToken } from "../middlewares/jwt.js";
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.post("/up", signUpController);
 // 중복 확인
 router.get("/up/duplicate/:id", signUpDuplicateController);
 
-// 로그아웃
-router.post("/out/:id", signOutController);
+// 회원탈퇴
+router.post("/out/:id", authenticateToken, signOutController);
 
 export default router;

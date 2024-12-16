@@ -12,7 +12,6 @@ const signUpService = async user => {
     }
     */
     // 유효성 통과 후 리포지토리 함수 호출
-    console.log("signUpData", user);
     const userdata = await signRepository.signUpRepository(user);
     return userdata;
   } catch (error) {
