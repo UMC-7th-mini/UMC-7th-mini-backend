@@ -36,8 +36,8 @@ const loginService = async userData => {
 };
 // 로그아웃
 const logoutService = async userId => {
-  const userId = await logoutRepository(userId);
-  if (!userId) {
+  const logoutUserId = await logoutRepository(userId);
+  if (!logoutUserId) {
     throw new Error("Invalid Id");
   }
   return { message: "User logged out successfully" };

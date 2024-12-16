@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://3.34.133.236/"
+      "url": "http://localhost:3000/"
     }
   ],
   "paths": {
@@ -212,10 +212,34 @@
     },
     "/users/sign/up": {
       "post": {
-        "description": "",
+        "tags": [
+          "signUp"
+        ],
+        "summary": " signup",
+        "description": "signup",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "signup 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUser"
+              }
+            }
           }
         }
       }
@@ -645,6 +669,35 @@
           "endDate": {
             "type": "string",
             "example": "2021-01-01"
+          }
+        }
+      },
+      "SignUser": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "user11652"
+          },
+          "userName": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "userPassword": {
+            "type": "string",
+            "example": "securepassword123"
+          },
+          "userEmail": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "gender": {
+            "type": "string",
+            "example": "MALE"
+          },
+          "birth": {
+            "type": "string",
+            "example": "1990-01-01T00:00:00.000Z"
           }
         }
       }

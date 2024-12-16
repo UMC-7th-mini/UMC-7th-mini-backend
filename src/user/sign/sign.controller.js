@@ -2,6 +2,30 @@ import signService from "./sign.service.js"; // Default Import
 import HttpException from "../../middlewares/errorHandler.js";
 
 export const signUpController = async (req, res, next) => {
+  /* #swagger.tags = ['signUp']
+  #swagger.summary = ' signup'
+  #swagger.description = 'signup'
+  #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/SignUser" },
+        },
+      }
+    }
+
+  #swagger.responses[200] = {
+  description: 'signup 성공',
+  content: {
+    "application/json": {
+      schema: { $ref: "#/components/schemas/SignUser" },
+    }
+  }
+} 
+  #swagger.responses[400] = {
+    description: '잘못된 요청 형식'
+} */
+
   try {
     const signUpData = req.body;
     const result = await signService.signUpService(signUpData);
