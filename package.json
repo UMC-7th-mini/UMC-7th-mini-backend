@@ -7,7 +7,8 @@
   "scripts": {
     "start": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prestart": "node ./swagger/swagger.js"
+    "prestart": "node ./swagger/swagger.js",
+    "mockData": "node mookData.js"
   },
   "repository": {
     "type": "git",
