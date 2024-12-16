@@ -1,5 +1,5 @@
 #!/bin/bash
-# 권한 추가
+# 권한 추가 (git bash 권한 추가)
 # chmod +x run-server.sh
 
 # Docker Compose 실행

@@ -6,29 +6,71 @@ import dotenv from 'dotenv';
 
 // 라우터 파일 가져오기
 import userRoutes from './user/user.route.js';
-import calendarRoutes from './calendar/calendar.route.js';
+// import calendarRouter from './calendar/calendar.route.js';
 import projectRoutes from './project/project.route.js';
 
 // 오류 처리 미들웨어 가져오기
+import swaggerUiExpress from "swagger-ui-express";
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
+import { getUserInfo } from './user/info/user.info.controller.js';
+import { getFinishProjectInfo, getProjectInfo, getWorkingProjectInfo } from './project/project.controller.js';
+import { getSpecificProjectInfo } from './project/project.controller.js';
+import swaggerFile from '../swagger/swagger-output.json' with { type: 'json' };
+import swaggerUi from 'swagger-ui-express';
 
 dotenv.config(); // dotenv 설정
 
 const app = express();
 const port = 3000;
 
+app.use(
+  "/docs",
+  swaggerUiExpress.serve,
+  swaggerUiExpress.setup(swaggerFile)
+);
+
+app.use((req, res, next) => {
+  if (req.protocol === 'http') {
+    console.log('HTTP 요청 처리 중');
+  }
+  next();
+});
+
 // 미들웨어 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-
+app.use(cors({ origin: "*" }));
 app.use(compression());
 app.use(morgan('dev'));
 
+
+
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 // 라우터 설정
-app.use("/users", userRoutes);
-app.use("/calendar", calendarRoutes);
-app.use("/projects", projectRoutes);
+
+// 지워 users 때문에 이상한거에 접속함
+
+// app.use("/users", userRoutes);/
+// app.use("/calendar", calendarRoutes);
+// app.use("/projects", projectRoutes);
+
+// jun
+app.post("/users/info", getUserInfo);
+app.post("/projects/info", getProjectInfo);
+app.post("/projects/:projectKey/info", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
+app.post("/projects/info/progress", getWorkingProjectInfo); // 프로젝트 진행 중
+app.post("/projects/info/finish", getFinishProjectInfo); // 프로젝트 끝
+
+
+// 이예지
+// app.post("/projects/:projectKey/member");
+// app.delect("/projects/:projectKey/member");
+// app.put("/projects/:projectKey/task/:taskKey");
+// app.post("/projects/:projectKey/:userKey/task");
+// app.delect("/projects/:projectKey/task/:taskKey");
+// Extra
+// app.get()
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);
