@@ -29,6 +29,12 @@ app.use(
   swaggerUiExpress.setup(swaggerFile)
 );
 
+app.use((req, res, next) => {
+  if (req.protocol === 'http') {
+    console.log('HTTP 요청 처리 중');
+  }
+  next();
+});
 
 // 미들웨어 설정
 app.use(express.json());
