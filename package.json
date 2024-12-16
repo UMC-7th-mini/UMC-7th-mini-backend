@@ -5,10 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon src/index.js",
+    "start": "nodemon src/index.js && node src/DB/mookData.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prestart": "node ./swagger/swagger.js",
-    "mockData": "node mookData.js"
+    "prestart": "node ./swagger/swagger.js"
   },
   "repository": {
     "type": "git",
