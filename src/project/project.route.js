@@ -7,6 +7,7 @@ router.get("/", (req, res) => {
   res.send("project main route");
 });
 
+
 // 추가 라우터 사용하기
 router.use("/info", (req, res) => {
   // /project/info - 똑같은 형식으로 사용

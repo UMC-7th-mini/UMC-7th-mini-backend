@@ -290,14 +290,46 @@ export const addTask = async (data, key) => {
 };
 
 
+export const putTaskRepository = async (data, taskKey) => {
+    const { taskName, taskProgress, taskStartDate, taskEndDate, userKey, projectKey } = data;
+  
+    const existingTask = await prisma.taskTable.findUnique({
+      where: { taskKey: taskKey },
+    });
+  
+    if (!existingTask) {
+      throw new Error("Task not found");
+    }
+  
+    if (existingTask.userKey !== userKey) {
+      throw new Error("Unauthorized to update this task");
+    }
+  
+    const updatedTask = await prisma.taskTable.update({
+      where: {
+        taskKey: taskKey, 
+      },
+      data: {
+        taskName: taskName,
+        taskProgress: taskProgress,
+        taskStartDate: taskStartDate,
+        taskEndDate: taskEndDate,
+        userKey: userKey, 
+        projectKey: projectKey,
+      },
+    });
+  
+    return updatedTask; 
+  };
 
-export const deleteTaskRepository = async (key, taskKey) => {
+
+  export const deleteTaskRepository = async (key, taskKey) => {
     try {
       const task = await prisma.taskTable.delete({
         where: {
-          TaskTable: {
-            userKey: key,
+            taskTables: {
             taskKey: taskKey,
+            userKey: key,
           },
         },
       });

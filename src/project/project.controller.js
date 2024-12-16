@@ -1,5 +1,7 @@
+import { StatusCodes } from "http-status-codes";
 import HttpException from "../middlewares/errorHandler.js";
-import { getFinishProjectInfoService, getLeastProjectInfoService, getProjectInfoService, getRecentProjectInfoService, getSpecificProjectInfoService, getWorkingProjectService } from "./project.service.js";
+import { bodyToTask, bodyToTaskPut } from "./dtos/project.dto.js";
+import { createTask, deleteTaskService, getFinishProjectInfoService, getLeastProjectInfoService, getProjectInfoService, getRecentProjectInfoService, getSpecificProjectInfoService, getWorkingProjectService, putTaskService } from "./project.service.js";
 
 
 export const getProjectInfo = async (req, res, next) => {
@@ -277,4 +279,129 @@ export const getLeastProjectInfo = async (req, res, next) => {
     } catch (error) {
       return error;
     }
+};
+
+
+export const addTaskController = async(req, res, next) => {
+  /* #swagger.tags = ['Task']
+  #swagger.summary = 'add task'
+  #swagger.description = 'add task'
+  #swagger.parameters['projectKey'] = {
+        in: 'path',                            
+        description: 'add task',                   
+        required: 'true',                     
+        type: 'number',
+        schema: {
+            type : "integer"
+        }        
+  }
+
+  #swagger.responses[200] = {
+  description: 'add task 성공',
+  content: {
+    "application/json": {
+      schema: { $ref: "#/components/schemas/TaskTable" },
+    }
+  }
+} 
+  #swagger.responses[400] = {
+    description: '잘못된 요청 형식'
+} */
+  console.log("add task");
+  console.log("body:", req.body); 
+  const { key, id } = req.user;
+
+  const newTask = await createTask(bodyToTask(req.body), key);
+  res.status(StatusCodes.OK).json({ result : newTask });
+};
+
+
+export const putTaskController = async(req, res, next) => {
+  /* #swagger.tags = ['Task']
+  #swagger.summary = 'add task'
+  #swagger.description = 'add task'
+  #swagger.parameters['TaskKey'] = {
+        in: 'path',                            
+        description: 'put task',                   
+        required: 'true',                     
+        type: 'number',
+        schema: {
+            type : "integer"
+        }        
+  }
+
+  #swagger.responses[200] = {
+  description: 'add task 성공',
+  content: {
+    "application/json": {
+      schema: { $ref: "#/components/schemas/TaskTable" },
+    }
+  }
+} 
+  #swagger.responses[400] = {
+    description: '잘못된 요청 형식'
+}  */
+
+    try {
+      const { taskKey } = req.params;
+      console.log("taskKey:", taskKey);
+      console.log("body:", req.body);
+  
+      const putTask = await putTaskService(bodyToTaskPut(req.body), taskKey);
+  
+      if (!putTask) {
+        return next(new HttpException(404, "Task does not exist"));
+      }
+  
+      return res.status(200).json({ success: true, data: putTask });
+  
+    } catch (error) {
+      console.log(error);
+      return next(error);  // 에러 처리
+    }
+  };
+
+export const deleteTaskController = async (req, res, next) => {
+  /* #swagger.tags = ['Task']
+  #swagger.summary = 'add task'
+  #swagger.description = 'add task'
+  #swagger.parameters['TaskKey'] = {
+        in: 'path',                            
+        description: 'put task',                   
+        required: 'true',                     
+        type: 'number',
+        schema: {
+            type : "integer"
+        }        
+  }
+
+  #swagger.responses[200] = {
+  description: 'add task 성공',
+  content: {
+    "application/json": {
+      schema: { $ref: "#/components/schemas/TaskTable" },
+    }
+  }
+} 
+  #swagger.responses[400] = {
+    description: '잘못된 요청 형식'
+}  */
+  
+    try { 
+      const { key, id } = req.user;
+      const { taskKey } = req.params;
+
+      console.log("params" , key, taskKey);
+
+      const deleteTask = await deleteTaskService(key, taskKey);
+
+      if(!deleteTask) {
+        return next(new HttpException(404, "Task is not Exsist"));
+      }
+      return res.status(200).json({ success: true, data: deleteTask });
+    } catch(error) {
+      console.log(error);
+      return error;
+    }
+
 };

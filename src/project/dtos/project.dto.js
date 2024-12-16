@@ -22,3 +22,44 @@ export const projectInfoDTO = {
         this.name = "nonUser"; // 에러 이름을 설정
     }
 }
+
+export const bodyToTask = (body) => {
+	const taskStartDate = new Date(body.taskStartDate);
+    const taskEndDate = new Date(body.taskEndDate);
+	
+  return {
+    taskName : body.taskName,
+    taskProgress : body.taskProgress,
+    taskStartDate,
+    taskEndDate,
+  };
+}
+
+export const bodyToTaskPut = (body) => {
+	const taskStartDate = new Date(body.taskStartDate);
+  const taskEndDate = new Date(body.taskEndDate);
+	
+  return {
+    taskKey : body.taskKey,
+    taskName : body.taskName,
+    taskProgress : body.taskProgress,
+    taskStartDate,
+    taskEndDate,
+    userKey : body.userKey,
+  };
+}
+
+
+export const taskPostResponseDto = (task) => {
+    return {
+        data: {
+            taskKey: task.taskKey.toString(),
+            taskName: task.taskName,        
+            taskProgress: task.taskProgress, 
+            taskStartDate: task.taskStartDate,
+            taskEndDate: task.taskEndDate,  
+            userKey: task.userKey.toString(),  
+            projectKey: task.projectKey.toString(), 
+        },
+    };
+};
