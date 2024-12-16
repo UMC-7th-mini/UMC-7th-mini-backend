@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const SECRET_KEY = "your_secret_key"; // 환경 변수로 설정 권장
-const EXPIRES_IN = "1h"; // 토큰 만료 시간
+const EXPIRES_IN = "15h"; // 토큰 만료 시간
 
 // JWT 토큰 생성
 const generateToken = payload => {
@@ -26,9 +26,9 @@ const authenticateToken = (req, res, next) => {
         .status(403)
         .json({ success: false, message: "Invalid or expired token" });
     }
-
     // 토큰 유효 -> 사용자 정보 추가
     req.user = user;
+    console.log(user);
     next();
   });
 };
