@@ -30,17 +30,20 @@ const port = 3000;
 
 app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerFile));
 
-app.use((req, res, next) => {
-  if (req.protocol === "http") {
-    console.log("HTTP 요청 처리 중");
-  }
-  next();
-});
+
+// CORS 설정 - 모든 도메인 허용 (혹은 특정 도메인만 허용하도록 수정 가능)
+// app.use(cors({
+//   origin: 'http://umc-d.kro.kr', // 특정 도메인만 허용 (예시)
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // 허용할 HTTP 메소드
+//   allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 헤더
+// }));
+
+app.use(cors());
+
 
 // 미들웨어 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: "*" }));
 app.use(compression());
 app.use(morgan("dev"));
 
@@ -54,21 +57,16 @@ app.use("/users", userRoutes);
 // app.use("/calendar", calendarRoutes);
 // app.use("/projects", projectRoutes);
 
-// jun
-app.post("/users/info", getUserInfo);
-app.post("/projects/info", getProjectInfo);
-app.post("/projects/:projectKey/info", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
-app.post("/projects/info/progress", getWorkingProjectInfo); // 프로젝트 진행 중
-app.post("/projects/info/finish", getFinishProjectInfo); // 프로젝트 끝
+app.get("/users/info/:userKey", getUserInfo);
+app.get("/projects/allinfo/:userKey", getProjectInfo);
+app.get("/projects/info/specify/:userKey/:projectKey", getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
+app.get("/projects/info/progress/:userKey", getWorkingProjectInfo); // 프로젝트 진행 중 (못 고침)
+app.get("/projects/info/finish/:userKey", getFinishProjectInfo); // 프로젝트 끝
 
-// 이예지
-// app.post("/projects/:projectKey/member");
-// app.delect("/projects/:projectKey/member");
-// app.put("/projects/:projectKey/task/:taskKey");
-// app.post("/projects/:projectKey/:userKey/task");
-// app.delect("/projects/:projectKey/task/:taskKey");
-// Extra
-// app.get()
+
+app.get("/projects/info/recent/:userKey", getRecentProjectInfo); // 최근 프로젝트 조회
+app.get("/projects/info/least/:userKey", getLeastProjectInfo); // 오래된 프로젝트 조회
+
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);

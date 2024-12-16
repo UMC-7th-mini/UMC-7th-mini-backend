@@ -6,35 +6,17 @@ const doc = {
     title: "User API",
     description: "API 문서",
   },
-  host: "localhost:3000",
-  basePath: "/",
-  schemes: ["http"],
-  consumes: ["application/json"],
-  produces: ["application/json"],
-  securityDefinitions: {
-    api_key: {
-      type: "apiKey",
-      name: "access token",
-      in: "header",
     },
-  },
-  components: {
-    schemas: {
-      duplicationUsers: {
-        resultType: "FAIL",
-        error: {
-          errorCode: "U001",
-          reason: "이미 존재하는 이메일입니다.",
-          data: {
-            userKey: "1",
-            userId: "user",
-            userName: "홍길동",
-            userEmail: "test@email.com",
-            gender: "male",
-            birth: "1999-01-01",
-            role: "user",
-            mbti: "ENFP",
-          },
+    host: "umc-d.kro.kr:3000",
+    basePath: "/",
+    schemes: ['http'],
+    consumes: ['application/json'],
+    produces: ['application/json'],
+    securityDefinitions: {
+        api_key: {
+          type: 'apiKey',
+          name: 'access token',
+          in: 'header',
         },
         success: false,
       },
@@ -128,6 +110,7 @@ const doc = {
     },
   },
 };
+
 
 const outputFile = "./swagger-output.json";
 const endpointsFiles = ["../src/index.js"];

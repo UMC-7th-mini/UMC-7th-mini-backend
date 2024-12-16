@@ -11,13 +11,24 @@
     }
   ],
   "paths": {
-    "/users/info": {
-      "post": {
+    "/users/info/{userKey}": {
+      "get": {
         "tags": [
           "userinfo"
         ],
         "summary": "Userget info",
         "description": "userinfo get",
+        "parameters": [
+          {
+            "name": "userKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "get user info"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -35,26 +46,27 @@
           "400": {
             "description": "잘못된 요청 형식"
           }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
         }
       }
     },
-    "/projects/info": {
-      "post": {
+    "/projects/allinfo/{userKey}": {
+      "get": {
         "tags": [
           "getProjectInfo"
         ],
         "summary": "get all project info",
         "description": "get all of project info",
+        "parameters": [
+          {
+            "name": "userKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "get all project info"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -64,7 +76,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectMatchUser"
+                  "$ref": "#/components/schemas/SpecificProject"
                 }
               }
             }
@@ -72,29 +84,254 @@
           "400": {
             "description": "잘못된 요청 형식"
           }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProjectMatchUser"
-              }
-            }
-          }
         }
       }
     },
-    "/projects/{projectKey}/info": {
-      "post": {
+    "/projects/info/specify/{userKey}/{projectKey}": {
+      "get": {
         "tags": [
           "getProjectInfo"
         ],
         "summary": "get one specific project info",
-        "description": "get specific project info",
+        "description": "get one specific project info",
         "parameters": [
           {
+            "name": "userKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "get one specific project info"
+          },
+          {
             "name": "projectKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "get one specific project info"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "project info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecificProject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        }
+      }
+    },
+    "/projects/info/progress/{userKey}": {
+      "get": {
+        "tags": [
+          "getProjectInfo"
+        ],
+        "summary": "get working project info",
+        "description": "get working project info",
+        "parameters": [
+          {
+            "name": "userKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "get all project info"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "project info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecificProject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        }
+      }
+    },
+    "/projects/info/finish/{userKey}": {
+      "get": {
+        "tags": [
+          "getProjectInfo"
+        ],
+        "summary": "get finished project info",
+        "description": "get finished project info",
+        "parameters": [
+          {
+            "name": "userKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "get finished project info"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "project info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecificProject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        }
+      }
+    },
+    "/projects/info/recent/{userKey}": {
+      "get": {
+        "tags": [
+          "getProjectInfo"
+        ],
+        "summary": "get Recent project info",
+        "description": "get Recent project info",
+        "parameters": [
+          {
+            "name": "userKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "get Recent project info"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "project info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecificProject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        }
+      }
+    },
+    "/projects/info/least/{userKey}": {
+      "get": {
+        "tags": [
+          "getProjectInfo"
+        ],
+        "summary": "get least project info",
+        "description": "get least project info",
+        "parameters": [
+          {
+            "name": "userKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "get least project info"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "project info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecificProject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          }
+        }
+      }
+    },
+    "/users/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/sign/up": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/sign/up/duplicate/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/sign/out/{id}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -106,96 +343,11 @@
           "200": {
             "description": "OK"
           },
-          "201": {
-            "description": "Project info get 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpecificProject"
-                }
-              }
-            }
-          },
           "400": {
-            "description": "잘못된 요청 형식"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SpecificProject"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/projects/info/progress": {
-      "post": {
-        "tags": [
-          "getProjectInfo"
-        ],
-        "summary": "project in progress",
-        "description": "project in progress",
-        "responses": {
-          "201": {
-            "description": "project info get 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpecificProject"
-                }
-              }
-            }
+            "description": "Bad Request"
           },
-          "400": {
-            "description": "잘못된 요청 형식"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SpecificProject"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/projects/info/finish": {
-      "post": {
-        "tags": [
-          "getProjectInfo"
-        ],
-        "summary": "project finish info",
-        "description": "project finish",
-        "responses": {
-          "201": {
-            "description": "project info get 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpecificProject"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "잘못된 요청 형식"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SpecificProject"
-              }
-            }
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -626,31 +778,6 @@
           }
         }
       },
-      "ProjectMatchUser": {
-        "type": "object",
-        "properties": {
-          "projectKey": {
-            "type": "number",
-            "example": 1
-          },
-          "projectName": {
-            "type": "string",
-            "example": "project1"
-          },
-          "totalProgress": {
-            "type": "number",
-            "example": 1
-          },
-          "startDate": {
-            "type": "string",
-            "example": "2021-01-01"
-          },
-          "endDate": {
-            "type": "string",
-            "example": "2021-01-01"
-          }
-        }
-      },
       "SpecificProject": {
         "type": "object",
         "properties": {
@@ -669,6 +796,15 @@
           "endDate": {
             "type": "string",
             "example": "2021-01-01"
+          }
+        }
+      },
+      "inputProject": {
+        "type": "object",
+        "properties": {
+          "userKey": {
+            "type": "number",
+            "example": 1
           }
         }
       },

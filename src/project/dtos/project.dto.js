@@ -16,12 +16,9 @@ export const projectInfoDTO = {
 
 
   // user id가 없는 에러를 출력
-  export const nonUser = data => {
-    if(!data) {
-      throw new HttpException(
-        404,
-        "User not found"
-      );
+  export class nonUser extends Error {
+    constructor(message = "User not found") {
+        super(message); // Error 클래스를 상속받아서 메시지를 전달
+        this.name = "nonUser"; // 에러 이름을 설정
     }
-  };
-  
+}
