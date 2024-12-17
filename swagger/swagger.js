@@ -109,6 +109,16 @@ const doc = {
       gender: "MALE",
       birth: "1990-01-01T00:00:00.000Z",
     },
+    login : {
+      userId: "user",
+      userPassword: "password123"
+    },
+    loginOut : {
+      userId: "user"
+    }, duplication : {
+      "success" : "true",
+      "success" : "false"
+    }
   },
 };
 
