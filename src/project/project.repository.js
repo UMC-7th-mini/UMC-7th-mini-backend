@@ -516,7 +516,7 @@ export const putTaskRepository = async (data, taskKey) => {
           endDate: new Date(projectInfo.endDate), // 종료 날짜
           projectName: projectInfo.projectName, // 프로젝트 이름
           taskCount: 0, // 초기 작업 수
-          currentProgress: "0", // 초기 진행 상태
+          currentProgress: 0, // 초기 진행 상태
           plantKey: projectInfo.plantKey || null, // 선택적 필드
           privateCalKey: projectInfo.privateCalKey || null, // 선택적 필드
         },
