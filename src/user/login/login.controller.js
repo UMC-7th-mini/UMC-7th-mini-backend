@@ -17,7 +17,7 @@ const loginController = async (req, res, next) => {
 // 로그아웃 컨트롤러
 const logoutController = async (req, res, next) => {
   try {
-    const logoutData = req.body;// userId
+    const logoutData = req.body; // userId
     const logoutResult = await logoutService(logoutData);
     if (!logoutResult) {
       return next(new HttpException(400, "잘못된 형식의 정보 전송"));

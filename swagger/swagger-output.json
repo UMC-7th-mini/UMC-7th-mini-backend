@@ -5,19 +5,14 @@
     "title": "User API",
     "description": "API 문서"
   },
-  "servers": [
-    {
-      "url": "http://http://umc-d.kro.kr:3000/"
-    }
-  ],
   "paths": {
     "/users/info": {
       "get": {
         "tags": [
           "userinfo"
         ],
-        "summary": "Userget info",
-        "description": "userinfo get",
+        "summary": "User get info",
+        "description": "Get user information",
         "parameters": [
           {
             "name": "authorization",
@@ -25,20 +20,11 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "userKey",
-            "in": "path",
-            "description": "get user info",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "User info get 성공",
+            "description": "User info retrieval successful",
             "content": {
               "application/json": {
                 "schema": {
@@ -48,15 +34,20 @@
             }
           },
           "400": {
-            "description": "잘못된 요청 형식"
+            "description": "Invalid request format"
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized - Access token missing or invalid"
           },
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/projects/info/all": {
@@ -72,15 +63,6 @@
             "in": "header",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "userKey",
-            "in": "path",
-            "description": "get all project info",
-            "required": true,
-            "schema": {
-              "type": "integer"
             }
           }
         ],
@@ -104,7 +86,56 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/projects/private/info/all": {
+      "get": {
+        "tags": [
+          "getProjectInfo"
+        ],
+        "summary": "get all private project info",
+        "description": "get all private of project info",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "project info get 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecificProject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/projects/info/specify/{projectKey}": {
@@ -130,15 +161,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "userKey",
-            "in": "path",
-            "description": "get one specific project info",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
           }
         ],
         "responses": {
@@ -161,7 +183,12 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/projects/info/progress": {
@@ -178,15 +205,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "userKey",
-            "in": "path",
-            "description": "get all project info",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
           }
         ],
         "responses": {
@@ -209,7 +227,12 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/projects/info/finish": {
@@ -226,15 +249,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "userKey",
-            "in": "path",
-            "description": "get finished project info",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
           }
         ],
         "responses": {
@@ -257,7 +271,12 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/projects/info/recent": {
@@ -274,15 +293,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "userKey",
-            "in": "path",
-            "description": "get Recent project info",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
           }
         ],
         "responses": {
@@ -305,7 +315,12 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/projects/info/least": {
@@ -322,15 +337,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "userKey",
-            "in": "path",
-            "description": "get least project info",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
           }
         ],
         "responses": {
@@ -353,7 +359,161 @@
           "403": {
             "description": "Forbidden"
           }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/projects/tasks/fix/{taskKey}": {
+      "put": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Update task",
+        "description": "Update a task with the provided details.",
+        "parameters": [
+          {
+            "name": "taskKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "TaskKey",
+            "in": "path",
+            "description": "Task Key to identify the task",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskTable"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "taskName": {
+                    "type": "string"
+                  },
+                  "taskProgress": {
+                    "type": "integer"
+                  },
+                  "taskStartDate": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "taskEndDate": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "taskName",
+                  "taskProgress"
+                ]
+              }
+            }
+          }
         }
+      }
+    },
+    "/projects/tasks/{taskKey}": {
+      "delete": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "add task",
+        "description": "add task",
+        "parameters": [
+          {
+            "name": "taskKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "TaskKey",
+            "in": "path",
+            "description": "put task",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "add task 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskTable"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 형식"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/users/": {
@@ -478,9 +638,76 @@
           }
         }
       }
+    },
+    "/projects/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/projects/projectMake": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/projects/taskMake": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "User": {
         "type": "object",
@@ -793,13 +1020,6 @@
             "example": "1990-01-01T00:00:00.000Z"
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "api_key": {
-        "type": "apiKey",
-        "name": "access token",
-        "in": "header"
       }
     }
   }

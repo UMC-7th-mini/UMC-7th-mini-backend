@@ -1,7 +1,7 @@
-import { EXPECTATION_FAILED, StatusCodes } from "http-status-codes";
+import { StatusCodes } from "http-status-codes";
 import HttpException from "../middlewares/errorHandler.js";
 import { bodyToTask, bodyToTaskPut } from "./dtos/project.dto.js";
-import { deleteTaskService, getFinishProjectInfoService, getLeastProjectInfoService, getPrivateProjectInfoService, getProjectInfoService, getRecentProjectInfoService, getSpecificProjectInfoService, getWorkingProjectService, putTaskService } from "./project.service.js";
+import { deleteTaskService, getFinishProjectInfoService, getLeastProjectInfoService, getPrivateProjectInfoService, getProjectInfoService, getRecentProjectInfoService, getSpecificProjectInfoService, getWorkingProjectService, projectMakeService, putTaskService, taskMakeService } from "./project.service.js";
 
 
 export const getProjectInfo = async (req, res, next) => {
@@ -402,4 +402,32 @@ export const deleteTaskController = async (req, res, next) => {
       console.log(error);
       return error;
     }
+};
+
+export const projectMakeController = async (req, res, next) => {
+  try {
+    const projectData = req.body;
+    const userKey = req.user.key;
+    const makeResult = await projectMakeService(projectData, userKey);
+    if (!makeResult) {
+      return next(new HttpException(400, "잘못된 형식의 정보 전송"));
+    }
+    res.status(200).json({ success: true, data: makeResult });
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
+export const taskMakeController = async (req, res, next) => {
+  try {
+    const userKey = req.user.key;
+    const taskData = req.body;
+    const makeResult = await taskMakeService(taskData, userKey);
+    if (!makeResult) {
+      return next(new HttpException(400, "잘못된 형식의 정보 전송"));
+    }
+    res.status(200).json({ success: true, data: taskData });
+  } catch (error) {
+    return error.message;
+  }
 };

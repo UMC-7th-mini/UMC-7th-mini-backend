@@ -61,7 +61,7 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use("/users", userRoutes);
 // app.use("/calendar", calendarRoutes);
-// app.use("/projects", projectRoutes);
+app.use("/projects", projectRoutes);
 
 app.get("/users/info", authenticateToken, getUserInfo);
 app.get("/projects/info/all", authenticateToken, getProjectInfo);
