@@ -110,7 +110,7 @@ export const getSpecificProjectInfo = async (req, res, next) => {
   description: 'project info get 성공',
   content: {
     "application/json": {
-      schema: { $ref: "#/components/schemas/SpecificProject" },
+      schema: { $ref: "#/components/schemas/duplication" },
     }
   }
 } 
@@ -297,7 +297,6 @@ export const getLeastProjectInfo = async (req, res, next) => {
 
 export const putTaskController = async (req, res, next) => {
   /* 
-  
     #swagger.security = [{
             "bearerAuth": []
     }]       
@@ -405,6 +404,44 @@ export const deleteTaskController = async (req, res, next) => {
 };
 
 export const projectMakeController = async (req, res, next) => {
+/* 
+    #swagger.security = [{
+            "bearerAuth": []
+    }]       
+    #swagger.tags = ['Project make']
+     #swagger.summary = 'Update project Make'
+     #swagger.description = 'Update a task with the provided details.'
+     #swagger.consumes = ['application/json'] 
+     #swagger.requestBody = {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                "projectName": "{ type: "string" },",
+                 "startDate": "{ type: "string", format: "date-time" }",
+                   "endDate": "{ type: "string", format: "date-time" }",
+                   teamMemberIds: {
+                    type: "array",
+                    items: { type: "string" }
+                },
+              },
+              required: ["projectName", "taskProgress"]
+            }
+          }
+        }
+     }
+     #swagger.responses[200] = {
+        description: 'Task updated successfully',
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/TaskTable" }
+          }
+        }
+     }
+  */
+
   try {
     const projectData = req.body;
     const userKey = req.user.key;
@@ -418,7 +455,44 @@ export const projectMakeController = async (req, res, next) => {
   }
 };
 
+
 export const taskMakeController = async (req, res, next) => {
+     /* 
+    #swagger.security = [{
+            "bearerAuth": []
+    }]       
+    #swagger.tags = ['Task']
+     #swagger.summary = 'Update project Make'
+     #swagger.description = 'Update a task with the provided details.'
+     #swagger.consumes = ['application/json'] 
+     #swagger.requestBody = {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                taskName: { type: "string" },
+                taskProgress: { type: "integer" },
+                taskStartDate: { type: "string", format: "date-time" },
+                taskEndDate: { type: "string", format: "date-time" },
+                userId : { type: "string" },
+                projectKey : { type: "integer" }
+              },
+              required: ["taskName", "taskProgress"]
+            }
+          }
+        }
+     }
+     #swagger.responses[200] = {
+        description: 'Task updated successfully',
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/TaskTable" }
+          }
+        }
+     }
+  */
   try {
     const userKey = req.user.key;
     const taskData = req.body;

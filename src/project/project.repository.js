@@ -63,6 +63,7 @@ export const getUserMatchProject = async (userKey) => {
             select: {
               userName: true, // 팀원 이름
               userKey: true, // 필요 시 팀원의 ID도 가져올 수 있음
+              userId : true,
             },
           },
         },
@@ -74,7 +75,6 @@ export const getUserMatchProject = async (userKey) => {
         const teamMembers = projectTeamMembers
           .filter(member => member.projectKey === info.project.projectKey) // 프로젝트 키로 필터링
           .map(member => member.user.userName); // 팀원 이름만 추출
-  
         return {
           userName: info.user.userName, // 요청한 사용자의 이름
           ...info.project,
@@ -93,7 +93,6 @@ export const getUserMatchProject = async (userKey) => {
       throw error;
     }
   };
-
 
 
 // 1유저에 대한 프로젝트와 그에 대한 Task
@@ -169,50 +168,64 @@ export const getUserMatchProject = async (userKey) => {
 
 // project 1개에 대한 정보
 export const getUserMatchProjectRepository = async (userKey, projectKey) => {
-    const projectInfo = await prisma.projectInfo.findFirst({
-        where: {
-            userKey: parseInt(userKey), // userKey 필터링
-            projectKey: parseInt(projectKey), // projectKey 필터링
-        },
-        include: {
-            project: { // Project 테이블과 조인
-                select: {
-                    projectName: true,
-                    totalProgress: true,
-                    taskCount: true,
-                    startDate: true,
-                    endDate: true,
-                    taskTables: { // TaskTable 데이터 포함
-                        select: {
-                            userKey : true,
-                            taskKey: true,
-                            taskName: true,
-                            taskProgress: true,
-                            taskStartDate: true,
-                            taskEndDate: true,
-                        },
-                    },
-                },
-            },
-        },
-    });
+  // 유저 존재 여부 확인
+  const userExists = await prisma.user.findUnique({
+      where: {
+          userKey: parseInt(userKey), // userKey 필터링
+      },
+  });
 
-    console.log("Repository result:", JSON.stringify(projectInfo, null, 2));
+  if (!userExists) {
+      throw new HttpException(404, "User not found"); // 유저가 존재하지 않을 때 404 반환
+  }
 
-    if (!projectInfo) {
-        throw new HttpException(404, "Project not found");
-    }
+  // 프로젝트 정보 조회
+  const projectInfo = await prisma.projectInfo.findFirst({
+      where: {
+          userKey: parseInt(userKey), // userKey 필터링
+          projectKey: parseInt(projectKey), // projectKey 필터링
+      },
+      include: {
+          project: { // Project 테이블과 조인
+              select: {
+                  projectName: true,
+                  totalProgress: true,
+                  taskCount: true,
+                  startDate: true,
+                  endDate: true,
+                  taskTables: { // TaskTable 데이터 포함
+                      select: {
+                          userKey: true,
+                          taskKey: true,
+                          taskName: true,
+                          taskProgress: true,
+                          taskStartDate: true,
+                          taskEndDate: true,
+                      },
+                  },
+              },
+          },
+      },
+  });
 
-    // project 필드에 포함된 Project 정보 반환
-    return {
-        ...projectInfo.project,
-        tasks: projectInfo.project.taskTables, // TaskTable 정보 추가
-    };
+  console.log("Repository result:", JSON.stringify(projectInfo, null, 2));
+
+  if (!projectInfo || projectInfo.length === 0) {
+    throw new Error("No projects found for this user.");
+  }
+  // 프로젝트가 존재하지 않을 경우 404 에러 반환
+
+  // project 필드에 포함된 Project 정보 반환
+  return {
+      ...projectInfo.project,
+      tasks: projectInfo.project.taskTables, // TaskTable 정보 추가
+  };
 };
 
 
 // 진행 중인 프로젝트
 export const getWorkingProjectRepository = async (userKey) => {
+  try {
     const projectInfos = await prisma.projectInfo.findMany({
         where: {
             userKey: parseInt(userKey), // userKey로 필터링
@@ -228,13 +241,14 @@ export const getWorkingProjectRepository = async (userKey) => {
             },
         },
     });
+    
+    if (!projectInfos || projectInfos.length === 0) {
+    throw new nonUser("No ongoing projects found for this user.");
+    }
 
     // 로그 추가
     console.log("Raw projectInfos: ", JSON.stringify(projectInfos, null, 2));
     
-    if (!projectInfos || projectInfos.length === 0) {
-        throw new nonUser("No ongoing projects found for this user.");
-    }
 
     // 2. `Project` 모델에서 필터링
     const filteredProjects = projectInfos
@@ -250,12 +264,16 @@ export const getWorkingProjectRepository = async (userKey) => {
     }
 
     return filteredProjects; // 프로젝트 정보 반환
+  } catch (error) {
+    throw new nonUser("No ongoing projects found for this user.");
+  }
 };
     
 
 
 // 끝난 프로젝트 조회회
 export const getFinishProjectRepository = async (userKey) => {
+  try {
     const projectInfos = await prisma.projectInfo.findMany({
         where: {
             userKey: parseInt(userKey), // userKey로 필터링
@@ -272,12 +290,13 @@ export const getFinishProjectRepository = async (userKey) => {
         },
     });
 
-    // 로그 추가
-    console.log("Raw projectInfos: ", JSON.stringify(projectInfos, null, 2));
-    
     if (!projectInfos || projectInfos.length === 0) {
         throw new nonUser("No ongoing projects found for this user.");
     }
+
+    // 로그 추가
+    console.log("Raw projectInfos: ", JSON.stringify(projectInfos, null, 2));
+    
 
     // 2. `Project` 모델에서 필터링
     const filteredProjects = projectInfos
@@ -293,11 +312,15 @@ export const getFinishProjectRepository = async (userKey) => {
     }
 
     return filteredProjects; // 프로젝트 정보 반환
+  } catch (error) {
+    throw new nonUser("No ongoing projects found for this user.");
+  }
 };
 
 
 // 조회 순서 최근, 오래된 것
 export const getRecentProjectRepository = async (userKey) => {
+  try {
     console.log(userKey);
     const projects = await prisma.projectInfo.findMany({
         where: {
@@ -334,11 +357,14 @@ export const getRecentProjectRepository = async (userKey) => {
     }
 
     return filteredProjects; // 프로젝트 정보 반환
+  } catch (error) {
+    throw new nonUser("No recent projects found.");
+  }
 };
 
 //
 export const getLeastProjectRepository = async (userKey) => {
-    console.log(userKey);
+ try {
     const projects = await prisma.projectInfo.findMany({
         where: {
             userKey: parseInt(userKey),
@@ -362,7 +388,6 @@ export const getLeastProjectRepository = async (userKey) => {
             },
         ],
     });
-
     console.log("Repository results: ", JSON.stringify(projects, null, 2));
 
     const filteredProjects = projects
@@ -374,6 +399,9 @@ export const getLeastProjectRepository = async (userKey) => {
     }
 
     return filteredProjects; // 프로젝트 정보 반환
+  } catch (error) {
+    throw new nonUser("No recent projects found.");
+  }
 };
 
 export const putTaskRepository = async (data, taskKey) => {
@@ -467,8 +495,8 @@ export const putTaskRepository = async (data, taskKey) => {
         data: {
           totalPeople: projectInfo.teamMemberIds.length + 1, // 팀원 수 (생성자 포함)
           totalProgress: 0, // 초기 진행률
-          startDate: new Date(projectInfo.startDate), // 시작 날짜
-          endDate: new Date(projectInfo.endDate), // 종료 날짜
+          startDate: projectInfo.startDate, // 시작 날짜
+          endDate: projectInfo.endDate, // 종료 날짜
           projectName: projectInfo.projectName, // 프로젝트 이름
           taskCount: 0, // 초기 작업 수
           currentProgress: "0", // 초기 진행 상태

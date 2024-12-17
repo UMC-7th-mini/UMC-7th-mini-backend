@@ -29,7 +29,6 @@ export const getPrivateProjectInfoService = async (userKey) => {
 };
 
 export const getSpecificProjectInfoService = async (userKey, projectKey) => {
-
     const project = await getUserMatchProjectRepository(userKey, projectKey);
 
     console.log("service : ", project, userKey);
@@ -53,7 +52,7 @@ export const getWorkingProjectService = async (userKey) => {
 
     console.log("service : ", userKey);
 
-    if (!project) {
+    if (!project || project.length == 0) {
         if(!userKey) {
             throw next(new HttpException(404, "User not Fount"));
         }
@@ -62,6 +61,11 @@ export const getWorkingProjectService = async (userKey) => {
         }
         throw new nonUser();
     }
+
+    if(project.length == 0) {
+      throw next(new HttpException(404, "Project not Found"));
+    }
+
     return project;
 };
 
@@ -71,7 +75,7 @@ export const getFinishProjectInfoService = async (userKey) => {
 
     console.log("service : ", userKey);
 
-    if (!project) {
+    if (!project || project.length == 0) {
         if(!userKey) {
             throw next(new HttpException(404, "User not Fount"));
         }
@@ -79,6 +83,9 @@ export const getFinishProjectInfoService = async (userKey) => {
             throw next(new HttpException(404, "Project not Found"));
         }
         throw new nonUser();
+    }
+    if(project.length == 0) {
+      throw next(new HttpException(404, "Project not Found"));
     }
 
     return project;
@@ -90,7 +97,7 @@ export const getRecentProjectInfoService = async (userKey) => {
 
     console.log("service : ", userKey);
 
-    if (!project) {
+    if (!project || project.length == 0) {
         if(!userKey) {
             throw next(new HttpException(404, "User not Fount"));
         }
@@ -98,6 +105,9 @@ export const getRecentProjectInfoService = async (userKey) => {
             throw next(new HttpException(404, "Project not Found"));
         }
         throw new nonUser();
+    }
+    if(project.length == 0) {
+      throw next(new HttpException(404, "Project not Found"));
     }
 
     return project;
@@ -109,7 +119,7 @@ export const getLeastProjectInfoService = async (userKey) => {
 
     console.log("service : ", userKey);
 
-    if (!project) {
+    if (!project || project.length == 0) {
         if(!userKey) {
             throw next(new HttpException(404, "User not Fount"));
         }
@@ -118,7 +128,6 @@ export const getLeastProjectInfoService = async (userKey) => {
         }
         throw new nonUser();
     }
-
     return project;
 };
 
