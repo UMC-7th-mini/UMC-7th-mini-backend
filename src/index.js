@@ -37,13 +37,13 @@ const port = 3000;
 app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerFile));
 
 
-app.use(cors({
-  origin: 'http://umc-d.kro.kr', // 특정 도메인만 허용 (예시)
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // 허용할 HTTP 메소드
-  allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 헤더
-}));
+// app.use(cors({
+//   origin: 'http://umc-d.kro.kr', // 특정 도메인만 허용 (예시)
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // 허용할 HTTP 메소드
+//   allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 헤더
+// }));
 
-// app.use(cors());
+app.use(cors());
 
 
 // 미들웨어 설정
