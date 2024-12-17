@@ -152,7 +152,11 @@ export const getWorkingProjectInfo = async (req, res, next) => {
 
 
 export const getFinishProjectInfo = async (req, res, next) => {
-/* #swagger.tags = ['getProjectInfo']
+/*
+  #swagger.security = [{
+            "bearerAuth": []
+    }]
+  #swagger.tags = ['getProjectInfo']
   #swagger.summary = 'get finished project info'
   #swagger.description = 'get finished project info'
   #swagger.parameters['userKey'] = {
@@ -316,50 +320,61 @@ export const addTaskController = async(req, res, next) => {
 };
 
 
-export const putTaskController = async(req, res, next) => {
+export const putTaskController = async (req, res, next) => {
   /* #swagger.tags = ['Task']
-  #swagger.summary = 'add task'
-  #swagger.description = 'add task'
-  #swagger.parameters['TaskKey'] = {
-        in: 'path',                            
-        description: 'put task',                   
-        required: 'true',                     
-        type: 'number',
-        schema: {
-            type : "integer"
-        }        
-  }
+     #swagger.summary = 'Update task'
+     #swagger.description = 'Update a task with the provided details.'
+     #swagger.consumes = ['application/json'] 
+     #swagger.parameters['TaskKey'] = {
+        in: 'path',
+        description: 'Task Key to identify the task',
+        required: true,
+        type: 'integer'
+     }
+     #swagger.requestBody = {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                taskName: { type: "string" },
+                taskProgress: { type: "integer" },
+                taskStartDate: { type: "string", format: "date-time" },
+                taskEndDate: { type: "string", format: "date-time" }
+              },
+              required: ["taskName", "taskProgress"]
+            }
+          }
+        }
+     }
+     #swagger.responses[200] = {
+        description: 'Task updated successfully',
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/TaskTable" }
+          }
+        }
+     }
+  */
 
-  #swagger.responses[200] = {
-  description: 'add task 성공',
-  content: {
-    "application/json": {
-      schema: { $ref: "#/components/schemas/TaskTable" },
-    }
-  }
-} 
-  #swagger.responses[400] = {
-    description: '잘못된 요청 형식'
-}  */
+  try {
+    const { taskKey } = req.params;
+    const { key: userKey } = req.user;
 
-    try {
-      const { taskKey } = req.params;
-      console.log("taskKey:", taskKey);
-      console.log("body:", req.body);
-  
-      const putTask = await putTaskService(bodyToTaskPut(req.body), taskKey);
-  
-      if (!putTask) {
-        return next(new HttpException(404, "Task does not exist"));
-      }
-  
-      return res.status(200).json({ success: true, data: putTask });
-  
-    } catch (error) {
-      console.log(error);
-      return next(error);  // 에러 처리
+    const putTask = await putTaskService(bodyToTaskPut(req.body), taskKey, userKey);
+
+    if (!putTask) {
+      return next(new HttpException(404, "Task does not exist"));
     }
-  };
+
+    return res.status(200).json({ success: true, data: putTask });
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
+};
+
 
 export const deleteTaskController = async (req, res, next) => {
   /* #swagger.tags = ['Task']
@@ -403,5 +418,4 @@ export const deleteTaskController = async (req, res, next) => {
       console.log(error);
       return error;
     }
-
 };

@@ -63,3 +63,14 @@ export const taskPostResponseDto = (task) => {
         },
     };
 };
+
+export const projectDto = (project) => {
+  return {
+      data: {
+          projectName : project.projectName,
+          projectStart : project.startData,
+          projectEnd : project.endDate,
+          userId : project.userId
+      },
+  };
+};

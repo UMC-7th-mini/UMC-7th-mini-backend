@@ -318,49 +318,56 @@ export const addTask = async (data, key) => {
 
 
 export const putTaskRepository = async (data, taskKey) => {
-    const { taskName, taskProgress, taskStartDate, taskEndDate, userKey, projectKey } = data;
-  
-    const existingTask = await prisma.taskTable.findUnique({
-      where: { taskKey: taskKey },
-    });
-  
-    if (!existingTask) {
-      throw new Error("Task not found");
-    }
-  
-    if (existingTask.userKey !== userKey) {
-      throw new Error("Unauthorized to update this task");
-    }
-  
-    const updatedTask = await prisma.taskTable.update({
-      where: {
-        taskKey: taskKey, 
-      },
-      data: {
-        taskName: taskName,
-        taskProgress: taskProgress,
-        taskStartDate: taskStartDate,
-        taskEndDate: taskEndDate,
-        userKey: userKey, 
-        projectKey: projectKey,
-      },
-    });
-  
-    return updatedTask; 
-  };
+  const { taskName, taskProgress, taskStartDate, taskEndDate, userKey, projectKey } = data;
+
+  const existingTask = await prisma.taskTable.findUnique({
+    where: { taskKey: parseInt(taskKey, 10) },
+  });
+
+  if (!existingTask) {
+    throw new Error("Task not found");
+  }
+
+  // 3. 업데이트 수행
+  const updatedTask = await prisma.taskTable.update({
+    where: { taskKey: parseInt(taskKey, 10) },
+    data: {
+      taskName: taskName,
+      taskProgress: taskProgress,
+      taskStartDate: new Date(taskStartDate),
+      taskEndDate: new Date(taskEndDate),
+      userKey: userKey, 
+      projectKey: projectKey || existingTask.projectKey,
+    },
+  });
+
+  return updatedTask;
+};
 
 
   export const deleteTaskRepository = async (key, taskKey) => {
     try {
-      const task = await prisma.taskTable.delete({
+      // taskKey와 userKey로 태스크 검색
+      const existingTask = await prisma.taskTable.findFirst({
         where: {
-            taskTables: {
-            taskKey: taskKey,
-            userKey: key,
-          },
+          taskKey: parseInt(taskKey), // taskKey를 정수로 변환
+          userKey: parseInt(key),    // userKey 조건 추가
         },
       });
-      return task;
+  
+      // 태스크가 존재하지 않으면 에러 발생
+      if (!existingTask) {
+        throw new Error("Task not found or not authorized to delete this task.");
+      }
+  
+      // 태스크 삭제
+      const deletedTask = await prisma.taskTable.delete({
+        where: {
+          taskKey: existingTask.taskKey,
+        },
+      });
+  
+      return deletedTask;
     } catch (error) {
       console.error("Error deleting task:", error);
       throw new Error("Task deletion failed.");
