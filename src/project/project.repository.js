@@ -7,63 +7,90 @@ const prisma = new PrismaClient({log: ['query']}); // PrismaClient 인스턴스 
 
 // 1 유저에 대한 모든 프로젝트 정보
 export const getUserMatchProject = async (userKey) => {
-    // `userKey`를 기준으로 관련된 프로젝트 및 사용자 이름 가져오기
-    const projectInfos = await prisma.projectInfo.findMany({
-      where: {
-        userKey: parseInt(userKey), // ProjectInfo 모델의 userKey로 필터링
-      },
-      include: {
-        project: { // Project 정보 포함
-          select: {
-            projectKey: true,
-            projectName: true,
-            totalProgress: true,
-            startDate: true,
-            endDate: true,
+    try {
+      // `userKey`를 기준으로 관련된 프로젝트 및 사용자 이름 가져오기
+      const projectInfos = await prisma.projectInfo.findMany({
+        where: {
+          userKey: parseInt(userKey), // ProjectInfo 모델의 userKey로 필터링
+        },
+        include: {
+          project: { // Project 정보 포함
+            select: {
+              projectKey: true,
+              projectName: true,
+              totalProgress: true,
+              startDate: true,
+              endDate: true,
+            },
+          },
+          user: { // User 정보 포함
+            select: {
+              userName: true, // 현재 사용자의 이름
+            },
           },
         },
-        user: { // User 정보 포함
-          select: {
-            userName: true, // 필요한 필드만 가져오기
+      });
+  
+      // 프로젝트 키 리스트 추출
+      const projectKeys = projectInfos.map(info => info.project.projectKey);
+  
+      // `TaskTable` 데이터를 프로젝트 키를 기준으로 가져오기
+      const tasks = await prisma.taskTable.findMany({
+        where: {
+          projectKey: {
+            in: projectKeys, // 해당 프로젝트에 연결된 TaskTable 데이터 필터링
           },
         },
-      },
-    });
-  
-    // 프로젝트 키 리스트 추출
-    const projectKeys = projectInfos.map(info => info.project.projectKey);
-  
-    // `TaskTable` 데이터를 프로젝트 키를 기준으로 가져오기
-    const tasks = await prisma.taskTable.findMany({
-      where: {
-        projectKey: {
-          in: projectKeys, // 해당 프로젝트에 연결된 TaskTable 데이터 필터링
+        select: {
+          taskName: true,
+          taskProgress: true,
+          taskStartDate: true,
+          taskEndDate: true,
+          projectKey: true, // 어떤 프로젝트와 연결된 Task인지 확인하기 위해 포함
         },
-      },
-      select: {
-        taskName: true,
-        taskProgress: true,
-        taskStartDate: true,
-        taskEndDate: true,
-        projectKey: true, // 어떤 프로젝트와 연결된 Task인지 확인하기 위해 포함
-      },
-    });
+      });
   
-    // 프로젝트와 TaskTable 데이터를 매핑
-    const projects = projectInfos.map(info => {
-      const relatedTasks = tasks.filter(task => task.projectKey === info.project.projectKey); // 각 프로젝트에 연결된 TaskTable
-      return {
-        userName: info.user.userName, // User 이름 포함
-        ...info.project,
-        tasks: relatedTasks, // 해당 프로젝트에 연결된 Task 데이터 추가
-      };
-    });
+      // 각 프로젝트에 연결된 팀원 정보 가져오기
+      const projectTeamMembers = await prisma.projectInfo.findMany({
+        where: {
+          projectKey: {
+            in: projectKeys, // 해당 프로젝트 키에 연결된 팀원 정보 필터링
+          },
+        },
+        include: {
+          user: { // 사용자 정보 포함
+            select: {
+              userName: true, // 팀원 이름
+              userKey: true, // 필요 시 팀원의 ID도 가져올 수 있음
+            },
+          },
+        },
+      });
   
-    if (!projects || projects.length === 0) {
-      throw new Error("No projects found for this user.");
+      // 프로젝트와 TaskTable, 팀원 데이터를 매핑
+      const projects = projectInfos.map(info => {
+        const relatedTasks = tasks.filter(task => task.projectKey === info.project.projectKey); // 각 프로젝트에 연결된 TaskTable
+        const teamMembers = projectTeamMembers
+          .filter(member => member.projectKey === info.project.projectKey) // 프로젝트 키로 필터링
+          .map(member => member.user.userName); // 팀원 이름만 추출
+  
+        return {
+          userName: info.user.userName, // 요청한 사용자의 이름
+          ...info.project,
+          tasks: relatedTasks, // 해당 프로젝트에 연결된 Task 데이터 추가
+          teamMembers, // 해당 프로젝트에 연결된 팀원 이름 추가
+        };
+      });
+  
+      if (!projects || projects.length === 0) {
+        throw new Error("No projects found for this user.");
+      }
+  
+      return projects; // 프로젝트 및 Task 정보와 사용자 이름, 팀원 반환
+    } catch (error) {
+      console.error("Error fetching user match project:", error);
+      throw error;
     }
-  
-    return projects; // 프로젝트 및 Task 정보와 사용자 이름 반환
   };
 
 
