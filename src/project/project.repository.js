@@ -26,6 +26,8 @@ export const getUserMatchProject = async (userKey) => {
           user: { // User 정보 포함
             select: {
               userName: true, // 현재 사용자의 이름
+              userKey: true, // 필요 시 팀원의 ID도 가져올 수 있음
+              userId : true,
             },
           },
         },
