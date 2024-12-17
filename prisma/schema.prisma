@@ -157,7 +157,7 @@ model Project {
   taskCount        Int
   plantKey         Int? // 1:1 관계
   privateCalKey    Int?
-  currentProgress  String
+  currentProgress  Int
   taskTables       TaskTable[]
   projectCalendars ProjectCalendar[] // 수정: 1:N 관계로 변경
   privateCalendar  PrivateCalendar?  @relation(fields: [privateCalKey], references: [privateCalendarKey], onDelete: SetNull)

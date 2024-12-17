@@ -30,7 +30,6 @@ const port = 3000;
 
 app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerFile));
 
-
 // CORS 설정 - 모든 도메인 허용 (혹은 특정 도메인만 허용하도록 수정 가능)
 // app.use(cors({
 //   origin: 'http://umc-d.kro.kr', // 특정 도메인만 허용 (예시)
@@ -39,7 +38,6 @@ app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerFile));
 // }));
 
 app.use(cors());
-
 
 // 미들웨어 설정
 app.use(express.json());
@@ -63,10 +61,8 @@ app.get("/projects/info/specify/:userKey/:projectKey", getSpecificProjectInfo); 
 app.get("/projects/info/progress/:userKey", getWorkingProjectInfo); // 프로젝트 진행 중 (못 고침)
 app.get("/projects/info/finish/:userKey", getFinishProjectInfo); // 프로젝트 끝
 
-
 app.get("/projects/info/recent/:userKey", getRecentProjectInfo); // 최근 프로젝트 조회
 app.get("/projects/info/least/:userKey", getLeastProjectInfo); // 오래된 프로젝트 조회
-
 
 // 404 처리 미들웨어
 app.use(notFoundHandler);
