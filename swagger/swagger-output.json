@@ -169,7 +169,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/duplication"
+                  "$ref": "#/components/schemas/SpecificProject"
                 }
               }
             }
@@ -562,11 +562,7 @@
     },
     "/users/sign/up/duplicate/{id}": {
       "get": {
-        "tags": [
-          "signUpDuplicaiotn"
-        ],
-        "summary": "User signUpDuplicaiotn",
-        "description": "Get user signUpDuplicaiotn",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -575,40 +571,13 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "get one specific project info",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "you can use it!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request format"
-          },
-          "401": {
-            "description": "Unauthorized - Access token missing or invalid"
+            "description": "OK"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/users/sign/out/{id}": {
@@ -652,88 +621,20 @@
     },
     "/users/auth/login": {
       "post": {
-        "tags": [
-          "login"
-        ],
-        "summary": "login",
-        "description": "login",
+        "description": "",
         "responses": {
           "200": {
-            "description": "login successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/login"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "userId": {
-                    "type": "string"
-                  },
-                  "userPassword": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "userId",
-                  "userPassword"
-                ]
-              }
-            }
+            "description": "OK"
           }
         }
       }
     },
     "/users/auth/logout": {
       "post": {
-        "tags": [
-          "loginOut"
-        ],
-        "summary": "loginOut",
-        "description": "loginOut",
+        "description": "",
         "responses": {
           "200": {
-            "description": "login Out successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/loginOut"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "userId": "user"
-                },
-                "required": "password123"
-              }
-            }
+            "description": "OK"
           }
         }
       }
@@ -750,11 +651,7 @@
     },
     "/projects/projectMake": {
       "post": {
-        "tags": [
-          "Project make"
-        ],
-        "summary": "Update project Make",
-        "description": "Update a task with the provided details.",
+        "description": "",
         "parameters": [
           {
             "name": "authorization",
@@ -766,14 +663,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Task updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TaskTable"
-                }
-              }
-            }
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized"
@@ -781,22 +671,12 @@
           "403": {
             "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {}
+        }
       }
     },
     "/projects/taskMake": {
       "post": {
-        "tags": [
-          "Task"
-        ],
-        "summary": "Update project Make",
-        "description": "Update a task with the provided details.",
+        "description": "",
         "parameters": [
           {
             "name": "authorization",
@@ -808,61 +688,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Task updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TaskTable"
-                }
-              }
-            }
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized"
           },
           "403": {
             "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "taskName": {
-                    "type": "string"
-                  },
-                  "taskProgress": {
-                    "type": "integer"
-                  },
-                  "taskStartDate": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "taskEndDate": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "userId": {
-                    "type": "string"
-                  },
-                  "projectKey": {
-                    "type": "integer"
-                  }
-                },
-                "required": [
-                  "taskName",
-                  "taskProgress"
-                ]
-              }
-            }
           }
         }
       }
