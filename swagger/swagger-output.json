@@ -7,11 +7,11 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000/"
+      "url": "http://http://umc-d.kro.kr:3000/"
     }
   ],
   "paths": {
-    "/users/info/{userKey}": {
+    "/users/info": {
       "get": {
         "tags": [
           "userinfo"
@@ -20,20 +20,24 @@
         "description": "userinfo get",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "userKey",
             "in": "path",
+            "description": "get user info",
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "get user info"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
             "description": "User info get 성공",
             "content": {
               "application/json": {
@@ -45,11 +49,17 @@
           },
           "400": {
             "description": "잘못된 요청 형식"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
     },
-    "/projects/allinfo/{userKey}": {
+    "/projects/info/all": {
       "get": {
         "tags": [
           "getProjectInfo"
@@ -58,20 +68,24 @@
         "description": "get all of project info",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "userKey",
             "in": "path",
+            "description": "get all project info",
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "get all project info"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
             "description": "project info get 성공",
             "content": {
               "application/json": {
@@ -83,11 +97,17 @@
           },
           "400": {
             "description": "잘못된 요청 형식"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
     },
-    "/projects/info/specify/{userKey}/{projectKey}": {
+    "/projects/info/specify/{projectKey}": {
       "get": {
         "tags": [
           "getProjectInfo"
@@ -96,7 +116,7 @@
         "description": "get one specific project info",
         "parameters": [
           {
-            "name": "userKey",
+            "name": "projectKey",
             "in": "path",
             "required": true,
             "schema": {
@@ -105,20 +125,24 @@
             "description": "get one specific project info"
           },
           {
-            "name": "projectKey",
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userKey",
             "in": "path",
+            "description": "get one specific project info",
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "get one specific project info"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
             "description": "project info get 성공",
             "content": {
               "application/json": {
@@ -130,11 +154,17 @@
           },
           "400": {
             "description": "잘못된 요청 형식"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
     },
-    "/projects/info/progress/{userKey}": {
+    "/projects/info/progress": {
       "get": {
         "tags": [
           "getProjectInfo"
@@ -143,20 +173,24 @@
         "description": "get working project info",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "userKey",
             "in": "path",
+            "description": "get all project info",
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "get all project info"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
             "description": "project info get 성공",
             "content": {
               "application/json": {
@@ -168,11 +202,17 @@
           },
           "400": {
             "description": "잘못된 요청 형식"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
     },
-    "/projects/info/finish/{userKey}": {
+    "/projects/info/finish": {
       "get": {
         "tags": [
           "getProjectInfo"
@@ -181,20 +221,24 @@
         "description": "get finished project info",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "userKey",
             "in": "path",
+            "description": "get finished project info",
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "get finished project info"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
             "description": "project info get 성공",
             "content": {
               "application/json": {
@@ -206,11 +250,17 @@
           },
           "400": {
             "description": "잘못된 요청 형식"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
     },
-    "/projects/info/recent/{userKey}": {
+    "/projects/info/recent": {
       "get": {
         "tags": [
           "getProjectInfo"
@@ -219,20 +269,24 @@
         "description": "get Recent project info",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "userKey",
             "in": "path",
+            "description": "get Recent project info",
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "get Recent project info"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
             "description": "project info get 성공",
             "content": {
               "application/json": {
@@ -244,11 +298,17 @@
           },
           "400": {
             "description": "잘못된 요청 형식"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
     },
-    "/projects/info/least/{userKey}": {
+    "/projects/info/least": {
       "get": {
         "tags": [
           "getProjectInfo"
@@ -257,20 +317,24 @@
         "description": "get least project info",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "userKey",
             "in": "path",
+            "description": "get least project info",
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "get least project info"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
             "description": "project info get 성공",
             "content": {
               "application/json": {
@@ -282,72 +346,12 @@
           },
           "400": {
             "description": "잘못된 요청 형식"
-          }
-        }
-      }
-    },
-    "/users/": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/users/sign/up": {
-      "post": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/users/sign/up/duplicate/{id}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/users/sign/out/{id}": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           },
-          "400": {
-            "description": "Bad Request"
+          "401": {
+            "description": "Unauthorized"
           },
-          "500": {
-            "description": "Internal Server Error"
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -478,69 +482,6 @@
   },
   "components": {
     "schemas": {
-      "duplicationUsers": {
-        "type": "object",
-        "properties": {
-          "resultType": {
-            "type": "string",
-            "example": "FAIL"
-          },
-          "error": {
-            "type": "object",
-            "properties": {
-              "errorCode": {
-                "type": "string",
-                "example": "U001"
-              },
-              "reason": {
-                "type": "string",
-                "example": "이미 존재하는 이메일입니다."
-              },
-              "data": {
-                "type": "object",
-                "properties": {
-                  "userKey": {
-                    "type": "string",
-                    "example": "1"
-                  },
-                  "userId": {
-                    "type": "string",
-                    "example": "user"
-                  },
-                  "userName": {
-                    "type": "string",
-                    "example": "홍길동"
-                  },
-                  "userEmail": {
-                    "type": "string",
-                    "example": "test@email.com"
-                  },
-                  "gender": {
-                    "type": "string",
-                    "example": "male"
-                  },
-                  "birth": {
-                    "type": "string",
-                    "example": "1999-01-01"
-                  },
-                  "role": {
-                    "type": "string",
-                    "example": "user"
-                  },
-                  "mbti": {
-                    "type": "string",
-                    "example": "ENFP"
-                  }
-                }
-              }
-            }
-          },
-          "success": {
-            "type": "boolean",
-            "example": false
-          }
-        }
-      },
       "User": {
         "type": "object",
         "properties": {
@@ -644,7 +585,7 @@
             "type": "number",
             "example": 1
           },
-          "taskNmae": {
+          "taskName": {
             "type": "string",
             "example": "TaskName"
           },
@@ -778,9 +719,13 @@
           }
         }
       },
-      "SpecificProject": {
+      "ProjectMatchUser": {
         "type": "object",
         "properties": {
+          "projectKey": {
+            "type": "number",
+            "example": 1
+          },
           "projectName": {
             "type": "string",
             "example": "project1"
@@ -799,12 +744,24 @@
           }
         }
       },
-      "inputProject": {
+      "SpecificProject": {
         "type": "object",
         "properties": {
-          "userKey": {
+          "projectName": {
+            "type": "string",
+            "example": "project1"
+          },
+          "totalProgress": {
             "type": "number",
             "example": 1
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2021-01-01"
           }
         }
       },
