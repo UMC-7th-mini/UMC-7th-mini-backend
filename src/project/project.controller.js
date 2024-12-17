@@ -441,18 +441,17 @@ export const projectMakeController = async (req, res, next) => {
         }
      }
   */
-
   try {
     const projectData = req.body;
-    const userKey = req.user.key;
-    const makeResult = await projectMakeService(projectData, userKey);
+    const userId = req.user.id;
+    const makeResult = await projectMakeService(projectData, userId);
     if (!makeResult) {
       return next(new HttpException(400, "잘못된 형식의 정보 전송"));
     }
     res.status(200).json({ success: true, data: makeResult });
   } catch (error) {
     console.error(error.message);
-  }
+  } 
 };
 
 

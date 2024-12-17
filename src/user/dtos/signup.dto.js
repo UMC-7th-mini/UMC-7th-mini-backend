@@ -7,15 +7,11 @@ export const signUpDTO = {
   birth: "date",
 };
 
-export const validateSignUpData = (data, dto) => {
-  console.log("dto", data);
+export const validateSignUpData = (data, signUpDTO) => {
   const errors = [];
 
-  Object.entries(dto).forEach(([key, type]) => {
+  Object.entries(signUpDTO).forEach(([key, type]) => {
     const value = data[key];
-    console.log(
-      `Validating key: ${key}, value: ${value}, expected type: ${type}`
-    );
 
     // 데이터 입력 여부 확인
     if (value === undefined || value === null || value === "") {

@@ -166,10 +166,9 @@ export const deleteTaskService = async (key, taskKey) => {
   };
 
 
-  export const projectMakeService = async (projectData, userKey) => {
+  export const projectMakeService = async (projectData, userId) => {
     try {
-      const projectInfo = await projectMakeRepository(projectData, userKey);
-      console.log("projectInfo", projectInfo);
+      const projectInfo = await projectMakeRepository(projectData, userId);
       if (!projectInfo) {
         throw new Error("not make project");
       }

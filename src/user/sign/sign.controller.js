@@ -39,6 +39,41 @@ export const signUpController = async (req, res, next) => {
 };
 
 export const signUpDuplicateController = async (req, res) => {
+  /* 
+  #swagger.security = [{
+    "bearerAuth": [] 
+  }] 
+  #swagger.tags = ['signUpDuplicaiotn']
+  #swagger.summary = 'User signUpDuplicaiotn'
+  #swagger.description = 'Get user signUpDuplicaiotn'
+  #swagger.parameters['userId'] = {
+    in: 'path',                            
+    description: 'get one specific project info',                   
+    required: 'true',                     
+    type: 'number',
+        schema: {
+            type : "integer"
+        }          
+  }
+  
+  #swagger.responses[200] = {
+    description: 'you can use it!',
+    content: {
+      "application/json": {
+        schema: { $ref: "#/components/schemas/User" }, 
+      }
+    }
+  }
+
+  #swagger.responses[400] = {
+    description: 'Invalid request format'
+  }
+
+  #swagger.responses[401] = {
+    description: 'Unauthorized - Access token missing or invalid'
+  }
+*/
+
   try {
     const result = await signService.signUpDuplicateService(req.params.id);
     return res.status(200).json({ success: true, data: result });

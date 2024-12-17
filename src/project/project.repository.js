@@ -471,31 +471,37 @@ export const putTaskRepository = async (data, taskKey) => {
   };
 
 
-  export const projectMakeRepository = async (projectInfo, userKey) => {
+  export const projectMakeRepository = async (projectInfo, userId) => {
     try {
-      // 유효한 팀원 확인 (userKey + teamMemberIds)
+      // 유효한 팀원 확인: userId를 기반으로 userKey 가져오기
       const validUsers = await prisma.user.findMany({
         where: {
-          userKey: {
-            in: [userKey, ...projectInfo.teamMemberIds], // 생성자 + 팀원 ID
+          userId: {
+            in: [userId, ...projectInfo.teamMemberIds], // 생성자 + 팀원 ID
           },
         },
-        select: { userKey: true },
+        select: { userId: true, userKey: true },
       });
   
-      const validUserKeys = validUsers.map(user => user.userKey);
+      // userId와 userKey 매핑 생성
+      const userIdToKeyMap = validUsers.reduce((map, user) => {
+        map[user.userId] = user.userKey;
+        return map;
+      }, {});
+  
+      console.log("UserId to UserKey Map:", userIdToKeyMap);
   
       // 검증: 모든 팀원이 유효한지 확인
-      if (!validUserKeys.includes(userKey)) {
-        throw new Error("Invalid creator userKey");
+      if (!userIdToKeyMap[userId]) {
+        throw new Error("Invalid creator userId");
       }
   
-      const missingKeys = projectInfo.teamMemberIds.filter(
-        id => !validUserKeys.includes(id)
+      const missingIds = projectInfo.teamMemberIds.filter(
+        id => !userIdToKeyMap[id]
       );
-      if (missingKeys.length > 0) {
+      if (missingIds.length > 0) {
         throw new Error(
-          `The following team member IDs are invalid: ${missingKeys.join(", ")}`
+          `The following team member IDs are invalid: ${missingIds.join(", ")}`
         );
       }
   
@@ -504,8 +510,8 @@ export const putTaskRepository = async (data, taskKey) => {
         data: {
           totalPeople: projectInfo.teamMemberIds.length + 1, // 팀원 수 (생성자 포함)
           totalProgress: 0, // 초기 진행률
-          startDate: projectInfo.startDate, // 시작 날짜
-          endDate: projectInfo.endDate, // 종료 날짜
+          startDate: new Date(projectInfo.startDate), // 시작 날짜
+          endDate: new Date(projectInfo.endDate), // 종료 날짜
           projectName: projectInfo.projectName, // 프로젝트 이름
           taskCount: 0, // 초기 작업 수
           currentProgress: "0", // 초기 진행 상태
@@ -517,14 +523,14 @@ export const putTaskRepository = async (data, taskKey) => {
       // 팀원 관계 설정 (ProjectInfo)
       const projectInfos = [
         {
-          userKey, // 생성자 userKey
-          projectKey: project.projectKey, // 생성된 프로젝트의 projectKey
+          userKey: userIdToKeyMap[userId], // 생성자 userKey
+          projectKey: project.projectKey,
           importance: true, // 생성자는 중요 역할로 설정
           authority: "ADMIN", // 생성자는 ADMIN 권한
         },
-        ...projectInfo.teamMemberIds.map(teamMemberKey => ({
-          userKey: teamMemberKey, // 팀원 userKey
-          projectKey: project.projectKey, // 생성된 프로젝트의 projectKey
+        ...projectInfo.teamMemberIds.map(teamMemberId => ({
+          userKey: userIdToKeyMap[teamMemberId], // 팀원 userKey
+          projectKey: project.projectKey,
           importance: false, // 기본값
           authority: "MEMBER", // 팀원은 MEMBER 권한
         })),
