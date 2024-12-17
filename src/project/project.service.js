@@ -1,6 +1,6 @@
 import HttpException from "../middlewares/errorHandler.js";
 import { nonUser, taskPostResponseDto } from "./dtos/project.dto.js";
-import { addTask, deleteTaskRepository, getFinishProjectRepository, getLeastProjectRepository, getRecentProjectRepository, getUserMatchProject, getUserMatchProjectRepository, getWorkingProjectRepository, putTaskRepository } from "./project.repository.js";
+import { deleteTaskRepository, getFinishProjectRepository, getLeastProjectRepository, getRecentProjectRepository, getUserMatchPrivateProjectRepository, getUserMatchProject, getUserMatchProjectRepository, getWorkingProjectRepository, putTaskRepository } from "./project.repository.js";
 
 
 export const getProjectInfoService = async (userKey) => {
@@ -15,6 +15,18 @@ export const getProjectInfoService = async (userKey) => {
     return project;
 };
 
+
+export const getPrivateProjectInfoService = async (userKey) => {
+    const project = await getUserMatchPrivateProjectRepository(userKey);
+
+    console.log("service : ", project);
+
+    if (!project) {
+        throw new nonUser();
+    }
+
+    return project;
+};
 
 export const getSpecificProjectInfoService = async (userKey, projectKey) => {
 
@@ -34,6 +46,7 @@ export const getSpecificProjectInfoService = async (userKey, projectKey) => {
 
     return project;
 };
+
 
 export const getWorkingProjectService = async (userKey) => {
     const project = await getWorkingProjectRepository (userKey);
@@ -109,24 +122,6 @@ export const getLeastProjectInfoService = async (userKey) => {
     return project;
 };
 
-
-export const createTask = async (data, key) => {
-    const addTaskKey = await addTask({
-        taskName : data.taskName,
-        taskProgress : data.taskProgress,
-        taskStartDate : data.taskStartDate,
-        taskEndDate : data.taskEndDate,
-        userKey : key,
-        projectKey : data.projectKey,
-    });
-
-    if(addTaskKey === null) {
-        throw new Error("존재하지 않는 과제입니다.");
-    }
-
-    const task = await getTask(addTaskKey);
-    return taskPostResponseDto(task);
-}
 
 
 export const putTaskService = async (data, taskKey, userKey) => {

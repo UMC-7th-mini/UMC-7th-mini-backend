@@ -6,19 +6,22 @@ const doc = {
     title: "User API",
     description: "API 문서",
   },
-  host: "umc-d.kro.kr:3000",
+ 
+  host: "http://umc-d.kro.kr:3000",
   basePath: "/",
   schemes: ['http'],
   consumes: ['application/json'],
   produces: ['application/json'],
-  securityDefinitions: {
-    api_key: {
-      type: 'apiKey',
-      name: 'access token',
-      in: 'header',
-    },
+  components: {
+    securitySchemes:{
+        bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT' 
+          },
+      },
   },
-  definitions: {  // This part needs to be corrected as the previous structure was invalid.
+  definitions: {  
     User: {
       userKey: 1,
       userId: "user",

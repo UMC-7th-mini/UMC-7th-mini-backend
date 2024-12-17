@@ -14,10 +14,10 @@ import projectRoutes from "./project/project.route.js";
 import swaggerUiExpress from "swagger-ui-express";
 import { notFoundHandler, errorHandler } from "./middlewares/errorHandler.js";
 import {
-  addTaskController,
   deleteTaskController,
   getFinishProjectInfo,
   getLeastProjectInfo,
+  getPrivateProjectInfo,
   getProjectInfo,
   getRecentProjectInfo,
   getWorkingProjectInfo,
@@ -65,6 +65,7 @@ app.use("/users", userRoutes);
 
 app.get("/users/info", authenticateToken, getUserInfo);
 app.get("/projects/info/all", authenticateToken, getProjectInfo);
+app.get("/projects/private/info/all", authenticateToken, getPrivateProjectInfo);
 app.get("/projects/info/specify/:projectKey", authenticateToken, getSpecificProjectInfo); // 프로젝트 1개 상세히 선택
 app.get("/projects/info/progress", authenticateToken, getWorkingProjectInfo); // 프로젝트 진행 중 (못 고침)
 app.get("/projects/info/finish", authenticateToken, getFinishProjectInfo); // 프로젝트 끝
@@ -74,7 +75,6 @@ app.get("/projects/info/recent", authenticateToken, getRecentProjectInfo); // �
 app.get("/projects/info/least", authenticateToken, getLeastProjectInfo); // 오래된 프로젝트 조회
 
 
-app.post("/projects/tasks", authenticateToken, addTaskController);
 app.put("/projects/tasks/fix/:taskKey", authenticateToken, putTaskController);
 app.delete("/projects/tasks/:taskKey", authenticateToken, deleteTaskController);
 
