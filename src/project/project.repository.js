@@ -144,6 +144,7 @@ export const getUserMatchProject = async (userKey) => {
       },
       select: {
         userKey: true,
+        taskKey: true,
         taskName: true,
         taskProgress: true,
         taskStartDate: true,
